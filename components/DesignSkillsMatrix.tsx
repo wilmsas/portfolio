@@ -342,12 +342,14 @@ function ProficiencyVisualized({
       </div>
 
       <div className="mt-4 grid place-items-center">
-        <div className={"w-full aspect-square " + maxW}>
+        <div className={"w-full aspect-square " + maxW + " overflow-visible rounded-2xl bg-white/40 p-8"}>
+          <div className="h-full w-full">
           {mode === "radar" ? (
             <RadarChart title={title} skills={skills} selections={selections} showCenter={false} />
           ) : (
             <PolarChart title={title} skills={skills} selections={selections} showCenter={false} />
           )}
+        </div>
         </div>
       </div>
 
@@ -371,7 +373,7 @@ function RadarChart({
 }) {
   // Responsive: SVG fills parent square.
   const size = 520;
-  const pad = 90;
+  const pad = 120;
   const cx = size / 2;
   const cy = size / 2;
   const maxR = 200;
@@ -392,7 +394,7 @@ function RadarChart({
 
   function labelPos(i: number) {
     const a = start + i * angleStep;
-    const r = maxR + 48;
+    const r = maxR + 24;
     return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), a };
   }
 
@@ -402,7 +404,7 @@ function RadarChart({
       height="100%"
       preserveAspectRatio="xMidYMid meet"
       viewBox={`${-pad} ${-pad} ${size + pad * 2} ${size + pad * 2}`}
-      className="overflow-visible"
+      className="block overflow-visible"
     >
       {Array.from({ length: rings }, (_, i) => {
         const lvl = (i + 1) as Level;
@@ -487,7 +489,7 @@ function PolarChart({
   showCenter: boolean;
 }) {
   const size = 520;
-  const pad = 90;
+  const pad = 120;
   const cx = size / 2;
   const cy = size / 2;
   const innerR = 70;
@@ -499,7 +501,7 @@ function PolarChart({
 
   function labelPos(i: number) {
     const a = start + (i + 0.5) * angle;
-    const r = outerR + 46;
+    const r = outerR + 22;
     return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), a };
   }
 
@@ -509,7 +511,7 @@ function PolarChart({
       height="100%"
       preserveAspectRatio="xMidYMid meet"
       viewBox={`${-pad} ${-pad} ${size + pad * 2} ${size + pad * 2}`}
-      className="overflow-visible"
+      className="block overflow-visible"
     >
       {[1, 2, 3, 4, 5].map((lvl) => {
         const r = innerR + ((outerR - innerR) * lvl) / 5;
