@@ -15,6 +15,7 @@ import {
     Copy,
     Check,
     ExternalLink,
+    Grid3X3
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -40,6 +41,8 @@ const NAV = [
     { key: "work", label: "Case Studies", icon: Briefcase },
     { key: "resume", label: "Resume", icon: FileText },
     { key: "contact", label: "Contact", icon: Mail },
+    { key: "skills-matrix", label: "Skills Matrix", href: "/skills-matrix", icon: Grid3X3 },
+
 ];
 
 const CASES = [
@@ -422,92 +425,6 @@ function CommandPalette({
         </div>
     );
 }
-
-function TopNav({
-    active,
-    onNavigate,
-    onOpenSearch,
-}: {
-    active: string;
-    onNavigate: (key: string) => void;
-    onOpenSearch: () => void;
-}) {
-    return (
-        <div className="sticky top-0 z-40 border-b border-[color:var(--border)]/70 bg-[color:var(--bg)]/80 backdrop-blur">
-            <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-                <button
-                    onClick={() => onNavigate("home")}
-                    className="group inline-flex items-center gap-2"
-                >
-                    <span className="grid h-9 w-9 place-items-center rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-sm group-hover:bg-[color:var(--pill)]">
-                        <Shield className="h-5 w-5 text-[color:var(--ink)]" />
-                    </span>
-                    <div className="text-left">
-                        <div className="text-sm font-semibold text-[color:var(--ink)]">Aleks</div>
-                        <div className="text-[12px] text-[color:var(--mutedText)]">Product Designer • TS-SCI</div>
-                    </div>
-                </button>
-
-                <div className="hidden items-center gap-1 md:flex">
-                    {NAV.map((n) => {
-                        const isOn = active === n.key;
-                        return (
-                            <button
-                                key={n.key}
-                                onClick={() => onNavigate(n.key)}
-                                className={cx(
-                                    "rounded-2xl px-3 py-2 text-sm font-semibold transition",
-                                    isOn
-                                        ? "bg-[color:var(--ink)] text-[color:var(--bg)]"
-                                        : "text-[color:var(--ink)] hover:bg-[color:var(--card)]"
-                                )}
-                            >
-                                {n.label}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                <button
-                    onClick={onOpenSearch}
-                    className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-semibold text-[color:var(--ink)] shadow-sm hover:bg-[color:var(--pill)]"
-                >
-                    <Search className="h-4 w-4 text-[color:var(--mutedText)]" />
-                    <span className="hidden sm:inline">Search</span>
-                    <span className="ml-1 hidden items-center gap-1 text-[12px] text-[color:var(--mutedText)] sm:flex">
-                        <Kbd>⌘</Kbd>
-                        <Kbd>K</Kbd>
-                    </span>
-                </button>
-            </div>
-
-            {/* Mobile nav (minimal) */}
-            <div className="mx-auto max-w-5xl px-4 pb-3 md:hidden">
-                <div className="grid grid-cols-4 gap-2">
-                    {NAV.map((n) => {
-                        const Icon = n.icon;
-                        const isOn = active === n.key;
-                        return (
-                            <button
-                                key={n.key}
-                                onClick={() => onNavigate(n.key)}
-                                className={cx(
-                                    "flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold",
-                                    isOn
-                                        ? "border-[color:var(--ink)] bg-[color:var(--ink)] text-[color:var(--bg)]"
-                                        : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--ink)]"
-                                )}
-                            >
-                                <Icon className={cx("h-4 w-4", isOn ? "text-[color:var(--bg)]" : "text-[color:var(--mutedText)]")} />
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
-        </div>
-    );
-}
-
 function Hero({
     onPrimary,
     onSecondary,
@@ -1005,12 +922,6 @@ export default function PortfolioMock({
                 } as React.CSSProperties
             }
         >
-            <TopNav
-                active={active}
-                onNavigate={onNavigate}
-                onOpenSearch={() => setCmdOpen(true)}
-            />
-
             <AnimatePresence>
                 {cmdOpen ? (
                     <CommandPalette
