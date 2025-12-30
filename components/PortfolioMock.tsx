@@ -1004,13 +1004,9 @@ export default function PortfolioMock({
                                         <div>
                                             <h2 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">Case Studies</h2>
                                             <p className="mt-2 text-sm text-[color:var(--mutedText)]">
-                                                Outcome-first summaries. Depth is available, but never required.
+                                                Note to Aleks, flesh this out more.
                                             </p>
                                         </div>
-                                        <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-3 py-1 text-[12px] font-semibold text-[color:var(--mutedText)]">
-                                            <Sparkles className="h-4 w-4 text-[color:var(--terra)]" />
-                                            calm layout
-                                        </span>
                                     </div>
 
                                     <div className="mt-6 space-y-3">
@@ -1052,7 +1048,7 @@ export default function PortfolioMock({
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                     <div>
                                         <h2 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">Resume</h2>
-                                        <p className="mt-2 text-sm text-[color:var(--mutedText)]">Keep this ruthless. Fast scan first, details second.</p>
+                                        <p className="mt-2 text-sm text-[color:var(--mutedText)]">Redesign this for better viewability.</p>
                                     </div>
                                     <a
                                         href="/resume.pdf"
@@ -1125,7 +1121,7 @@ export default function PortfolioMock({
                                 <div>
                                     <h2 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">Contact</h2>
                                     <p className="mt-2 text-sm text-[color:var(--mutedText)]">
-                                        I respond fastest when the ask is specific: role, mission, constraints.
+                                        Feel free to e-mail or connect through LinkedIn
                                     </p>
                                 </div>
 
@@ -1152,30 +1148,10 @@ export default function PortfolioMock({
                                         <ArrowUpRight className="h-4 w-4 text-[color:var(--bg)]" />
                                     </button>
                                 </div>
-
-                                <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-5 text-sm text-[color:var(--mutedText)]">
-                                    Optional: add a 3-field intake (role • product • constraint). If it’s longer than that, people won’t use it.
-                                </div>
                             </section>
                         </motion.div>
                     ) : null}
                 </AnimatePresence>
-
-                <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 text-[12px] text-[color:var(--mutedText)]">
-                    <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-3 py-1 font-semibold text-[color:var(--mutedText)]">
-                            <Sparkles className="h-3 w-3 text-[color:var(--sage)]" /> subtle motion
-                        </span>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-3 py-1 font-semibold text-[color:var(--mutedText)]">
-                            recruiter-safe
-                        </span>
-                    </div>
-                    <div className="inline-flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-[color:var(--terra)]" />
-                        <span className="h-2 w-2 rounded-full bg-[color:var(--sage)]" />
-                        <span className="h-2 w-2 rounded-full bg-[color:var(--sand)]" />
-                    </div>
-                </footer>
             </main>
 
             {/* Tiny toast */}
