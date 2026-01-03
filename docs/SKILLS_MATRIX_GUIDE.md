@@ -200,7 +200,7 @@ Design Skills Matrix
 │   └── Collaboration
 │
 └── Specialty (varies by role)
-    ├── Strategist (7 skills)
+    ├── UX Strategist (7 skills)
     ├── UI Designer (8 skills)
     ├── UX Architect (9 skills)
     └── Visual Designer (4 skills)

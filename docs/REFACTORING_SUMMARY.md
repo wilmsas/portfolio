@@ -52,7 +52,7 @@ portfolio/
 
 1. **Navigate to the appropriate data file**:
    - Core design skills: [data/skills/baseline.ts](data/skills/baseline.ts)
-   - Strategist skills: [data/skills/strategist.ts](data/skills/strategist.ts)
+   - UX Strategist skills: [data/skills/strategist.ts](data/skills/strategist.ts)
    - UI Designer skills: [data/skills/ui-designer.ts](data/skills/ui-designer.ts)
    - UX Architect skills: [data/skills/ux-architect.ts](data/skills/ux-architect.ts)
    - Visual Designer skills: [data/skills/visual-designer.ts](data/skills/visual-designer.ts)

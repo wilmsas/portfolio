@@ -66,7 +66,7 @@ The Design Skills Matrix received significant improvements:
 ### Data Layer
 - `data/skills/types.ts` - Type definitions
 - `data/skills/baseline.ts` - Baseline design skills
-- `data/skills/strategist.ts` - Strategist specialty skills
+- `data/skills/strategist.ts` - UX Strategist specialty skills
 - `data/skills/ui-designer.ts` - UI Designer specialty skills
 - `data/skills/ux-architect.ts` - UX Architect specialty skills
 - `data/skills/visual-designer.ts` - Visual Designer specialty skills

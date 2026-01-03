@@ -7,7 +7,7 @@ A modern portfolio built with Next.js 16, featuring a comprehensive Design Skill
 - **Dark Mode**: Full theme support with light/dark/system modes using next-themes
 - **Design Skills Matrix**: Interactive proficiency tracking system
   - 5-level scale (Learner → Expert)
-  - Baseline + 4 specialty tracks (Strategist, UI Designer, UX Architect, Visual Designer)
+  - Baseline + 4 specialty tracks (UX Strategist, UI Designer, UX Architect, Visual Designer)
   - Radar and polar chart visualizations
   - Learning resource recommendations
   - LocalStorage persistence

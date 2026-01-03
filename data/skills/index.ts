@@ -38,7 +38,7 @@ export const specialtySkills: Record<string, Skill[]> = {
  * Human-readable labels for specialties
  */
 export const specialtyLabels: Record<string, string> = {
-  strategist: "Strategist",
+  strategist: "UX Strategist",
   "ui-designer": "UI Designer",
   "ux-architect": "UX Architect",
   "visual-designer": "Visual Designer",
@@ -48,7 +48,7 @@ export const specialtyLabels: Record<string, string> = {
  * Options for specialty selector dropdown
  */
 export const specialtyOptions = [
-  { value: "strategist", label: "Strategist" },
+  { value: "strategist", label: "UX Strategist" },
   { value: "ui-designer", label: "UI Designer" },
   { value: "ux-architect", label: "UX Architect" },
   { value: "visual-designer", label: "Visual Designer" },
