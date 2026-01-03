@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(npx shadcn@latest add button card badge select separator)",
+      "Bash(npm install next-themes)",
+      "Bash(npm run dev:*)",
+      "Bash(rm:*)",
+      "Bash(powershell -Command \"\\(Get-Content ''components/skills-matrix/SkillsLaneCard.tsx''\\) -replace ''bg-background \\([^\"\"]*\\) dark:bg-slate-800'', ''bg-card $1'' -replace ''bg-background\\([^\"\"]*?\\)dark:bg-slate-800'', ''bg-card$1'' | Set-Content ''components/skills-matrix/SkillsLaneCard.tsx''\")",
+      "Bash(powershell -Command:*)",
+      "Bash(timeout /t 10)",
+      "Bash(ping:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

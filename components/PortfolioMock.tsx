@@ -159,7 +159,7 @@ async function safeCopyText(text: string): Promise<boolean> {
 
 function Kbd({ children }: { children: React.ReactNode }) {
     return (
-        <kbd className="rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-1.5 py-0.5 text-[11px] font-semibold text-[color:var(--mutedText)] shadow-sm">
+        <kbd className="rounded-md border border-border bg-card px-1.5 py-0.5 text-[11px] font-semibold text-muted-foreground shadow-sm">
             {children}
         </kbd>
     );
@@ -167,7 +167,7 @@ function Kbd({ children }: { children: React.ReactNode }) {
 
 function Tag({ children }: { children: React.ReactNode }) {
     return (
-        <span className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-2.5 py-1 text-[12px] font-medium text-[color:var(--mutedText)]">
+        <span className="inline-flex items-center rounded-full border border-border bg-card/80 px-2.5 py-1 text-[12px] font-medium text-muted-foreground">
             {children}
         </span>
     );
@@ -182,7 +182,7 @@ function Complexity({ n }: { n: number }) {
                     key={i}
                     className={cx(
                         "h-1.5 w-3 rounded-full",
-                        on ? "bg-[color:var(--ink)]" : "bg-[color:var(--border)]"
+                        on ? "bg-primary" : "bg-muted"
                     )}
                 />
             ))}
@@ -191,7 +191,7 @@ function Complexity({ n }: { n: number }) {
 }
 
 function Hairline() {
-    return <div className="h-px w-full bg-[color:var(--border)]/70" />;
+    return <div className="h-px w-full bg-muted" />;
 }
 
 function SubtleGlow() {
@@ -229,24 +229,24 @@ function CopyFallbackDialog({
 
     return (
         <div className="fixed inset-0 z-50" role="dialog" aria-modal>
-            <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
             <motion.div
                 initial={{ opacity: 0, y: 14, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                className="absolute left-1/2 top-24 w-[min(680px,92vw)] -translate-x-1/2 overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl"
+                className="absolute left-1/2 top-24 w-[min(680px,92vw)] -translate-x-1/2 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl"
             >
                 <div className="flex items-start justify-between gap-3 p-4">
                     <div>
-                        <div className="text-sm font-semibold text-[color:var(--ink)]">{title}</div>
-                        <div className="mt-1 text-[12px] text-[color:var(--mutedText)]">
+                        <div className="text-sm font-semibold text-foreground">{title}</div>
+                        <div className="mt-1 text-[12px] text-muted-foreground">
                             Copy is blocked in this environment. Select the text below and copy manually.
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-semibold text-[color:var(--mutedText)] hover:bg-[color:var(--pill)]"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
                     >
                         <X className="h-4 w-4" /> Close
                     </button>
@@ -257,9 +257,9 @@ function CopyFallbackDialog({
                         ref={inputRef}
                         readOnly
                         value={text}
-                        className="w-full rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] px-3 py-3 text-sm text-[color:var(--ink)] outline-none"
+                        className="w-full rounded-2xl border border-border bg-card/80 px-3 py-3 text-sm text-foreground outline-none"
                     />
-                    <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-[color:var(--mutedText)]">
+                    <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-muted-foreground">
                         <span>Tip:</span>
                         <Kbd>⌘</Kbd>
                         <span>+</span>
@@ -319,29 +319,29 @@ function CommandPalette({
 
     return (
         <div className="fixed inset-0 z-50" role="dialog" aria-modal>
-            <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
             <motion.div
                 initial={{ opacity: 0, y: 14, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                className="absolute left-1/2 top-24 w-[min(760px,92vw)] -translate-x-1/2 overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl"
+                className="absolute left-1/2 top-24 w-[min(760px,92vw)] -translate-x-1/2 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl"
             >
                 <div className="flex items-center gap-2 p-4">
-                    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-2">
-                        <Search className="h-4 w-4 text-[color:var(--mutedText)]" />
+                    <div className="rounded-2xl border border-border bg-card/80 p-2">
+                        <Search className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <input
                         ref={inputRef}
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
                         placeholder="Search: case studies, resume, contact…"
-                        className="w-full rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm text-[color:var(--ink)] outline-none placeholder:text-[color:var(--mutedText)]/70 focus:border-[color:var(--sage)]"
+                        className="w-full rounded-2xl border border-border bg-card px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-ring"
                     />
                     <button
                         onClick={onClose}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-semibold text-[color:var(--mutedText)] hover:bg-[color:var(--pill)]"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
                     >
                         <X className="h-4 w-4" />
                         Close
@@ -379,15 +379,15 @@ function CommandPalette({
                                     onClose();
                                 }}
 
-                                className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-transparent px-3 py-2 text-left hover:border-[color:var(--border)] hover:bg-[color:var(--pill)]"
+                                className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-transparent px-3 py-2 text-left hover:border-border hover:bg-accent"
                             >
                                 <div>
-                                    <div className="text-sm font-semibold text-[color:var(--ink)]">
+                                    <div className="text-sm font-semibold text-foreground">
                                         {item.label}
                                     </div>
-                                    <div className="text-[12px] text-[color:var(--mutedText)]">{item.hint}</div>
+                                    <div className="text-[12px] text-muted-foreground">{item.hint}</div>
                                 </div>
-                                <ChevronRight className="h-4 w-4 text-[color:var(--mutedText)] group-hover:text-[color:var(--ink)]" />
+                                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
                             </button>
                         ))}
 
@@ -397,7 +397,7 @@ function CommandPalette({
                                     initial={{ opacity: 0, y: 6 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: 6 }}
-                                    className="mx-2 mt-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-3 text-sm font-semibold text-[color:var(--ink)]"
+                                    className="mx-2 mt-2 rounded-2xl border border-border bg-card/80 p-3 text-sm font-semibold text-foreground"
                                 >
                                     <span className="inline-flex items-center gap-2">
                                         <Check className="h-4 w-4" /> Email copied
@@ -410,7 +410,7 @@ function CommandPalette({
 
                 <Hairline />
 
-                <div className="flex items-center justify-between p-4 text-[12px] text-[color:var(--mutedText)]">
+                <div className="flex items-center justify-between p-4 text-[12px] text-muted-foreground">
                     <div className="flex items-center gap-2">
                         <Kbd>⌘</Kbd>
                         <Kbd>K</Kbd>
@@ -433,26 +433,26 @@ function Hero({
     onSecondary: () => void;
 }) {
     return (
-        <section className="relative overflow-hidden rounded-[2.25rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm md:p-10">
+        <section className="relative overflow-hidden rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-10">
             <SubtleGlow />
             <div className="relative">
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-[12px] font-semibold text-[color:var(--mutedText)]">
-                        <Shield className="h-4 w-4 text-[color:var(--ink)]" />
+                    <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[12px] font-semibold text-muted-foreground">
+                        <Shield className="h-4 w-4 text-foreground" />
                         defense / gov fluent
                     </span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-3 py-1 text-[12px] font-semibold text-[color:var(--mutedText)]">
-                        <Sparkles className="h-4 w-4 text-[color:var(--sage)]" />
+                    <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1 text-[12px] font-semibold text-muted-foreground">
+                        <Sparkles className="h-4 w-4 text-primary" />
                         sharp + exploratory
                     </span>
                 </div>
 
-                <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-[color:var(--ink)] md:text-5xl">
+                <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
                     I design decision-ready products—
-                    <span className="text-[color:var(--mutedText)]"> turning ambiguity into alignment.</span>
+                    <span className="text-muted-foreground"> turning ambiguity into alignment.</span>
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-pretty text-base text-[color:var(--ink)]/80 md:text-lg">
+                <p className="mt-4 max-w-2xl text-pretty text-base text-foreground/80 md:text-lg">
                     My work is strongest in constrained, high-stakes environments: many stakeholders, unclear ownership, and systems that need
                     to ship without drama.
                 </p>
@@ -460,7 +460,7 @@ function Hero({
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                     <button
                         onClick={onPrimary}
-                        className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--ink)] px-4 py-2.5 text-sm font-semibold text-[color:var(--bg)] shadow-sm hover:opacity-95"
+                        className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-95"
                     >
                         <Briefcase className="h-4 w-4" />
                         View case studies
@@ -468,13 +468,13 @@ function Hero({
                     </button>
                     <button
                         onClick={onSecondary}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2.5 text-sm font-semibold text-[color:var(--ink)] hover:bg-[color:var(--pill)]"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent"
                     >
-                        <FileText className="h-4 w-4 text-[color:var(--mutedText)]" />
+                        <FileText className="h-4 w-4 text-muted-foreground" />
                         Resume
                         <ArrowUpRight className="h-4 w-4" />
                     </button>
-                    <div className="text-[12px] font-semibold text-[color:var(--mutedText)]">
+                    <div className="text-[12px] font-semibold text-muted-foreground">
                         Tip: <Kbd>⌘</Kbd> <Kbd>K</Kbd>
                     </div>
                 </div>
@@ -500,10 +500,10 @@ function Hero({
                     ].map((x) => (
                         <div
                             key={x.t}
-                            className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-4"
+                            className="rounded-2xl border border-border bg-card/80 p-4"
                         >
-                            <div className="text-[12px] font-semibold text-[color:var(--ink)]">{x.t}</div>
-                            <div className="mt-1 text-sm text-[color:var(--mutedText)]">{x.d}</div>
+                            <div className="text-[12px] font-semibold text-foreground">{x.t}</div>
+                            <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
                         </div>
                     ))}
                 </div>
@@ -537,21 +537,21 @@ function CaseRow({
             {/* Animated border ring */}
             <span
                 aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-[conic-gradient(from_0deg,var(--terra),var(--sage),var(--sand),var(--terra))] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-r from-primary/60 via-primary to-primary/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             />
 
             {/* Card */}
-            <div className="relative rounded-[1.7rem] border border-[color:var(--border)] bg-[color:var(--card)] p-5 shadow-sm">
+            <div className="relative rounded-[1.7rem] border border-border bg-card p-5 shadow-sm">
                 <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="truncate text-sm font-semibold text-[color:var(--ink)]">{c.title}</h3>
-                            <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-2 py-1 text-[11px] font-semibold text-[color:var(--mutedText)]">
-                                <Shield className="h-3 w-3 text-[color:var(--sage)]" />
+                            <h3 className="truncate text-sm font-semibold text-foreground">{c.title}</h3>
+                            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1 text-[11px] font-semibold text-muted-foreground">
+                                <Shield className="h-3 w-3 text-primary" />
                                 defense-ready
                             </span>
                         </div>
-                        <p className="mt-2 text-sm text-[color:var(--ink)]/80">{c.outcome}</p>
+                        <p className="mt-2 text-sm text-foreground/80">{c.outcome}</p>
 
                         <div className="mt-3 flex flex-wrap items-center gap-2">
                             {c.tags.slice(0, 4).map((t) => (
@@ -560,13 +560,13 @@ function CaseRow({
                         </div>
                     </div>
 
-                    <div className="shrink-0 text-[color:var(--mutedText)] group-hover:text-[color:var(--ink)]">
+                    <div className="shrink-0 text-muted-foreground group-hover:text-foreground">
                         <ArrowUpRight className="h-4 w-4" />
                     </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between text-[12px] text-[color:var(--mutedText)]">
-                    <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-2 py-1">{c.time}</span>
+                <div className="mt-4 flex items-center justify-between text-[12px] text-muted-foreground">
+                    <span className="rounded-full border border-border bg-card/80 px-2 py-1">{c.time}</span>
                     <span className="flex items-center gap-2">
                         <span className="opacity-70">Complexity</span>
                         <Complexity n={c.complexity} />
@@ -594,7 +594,7 @@ function CaseDetail({
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <button
                     onClick={onBack}
-                    className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-semibold text-[color:var(--mutedText)] hover:bg-[color:var(--pill)]"
+                    className="rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
                 >
                     ← Back
                 </button>
@@ -607,14 +607,14 @@ function CaseDetail({
                             setCopied(true);
                             setTimeout(() => setCopied(false), 1200);
                         }}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-semibold text-[color:var(--mutedText)] hover:bg-[color:var(--pill)]"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
                     >
                         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                         {copied ? "Copied" : "Share"}
                     </button>
                     <button
                         onClick={() => alert("Wire this up to a full write-up route / PDF.")}
-                        className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--ink)] px-3 py-2 text-sm font-semibold text-[color:var(--bg)] hover:opacity-95"
+                        className="inline-flex items-center gap-2 rounded-2xl bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-95"
                     >
                         <ExternalLink className="h-4 w-4" />
                         Full write-up
@@ -622,32 +622,32 @@ function CaseDetail({
                 </div>
             </div>
 
-            <section className="rounded-[2.25rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm md:p-8">
+            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
                 <div className="flex flex-wrap items-center gap-2">
                     {c.tags.map((t) => (
                         <Tag key={t}>{t}</Tag>
                     ))}
                 </div>
 
-                <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight text-[color:var(--ink)] md:text-3xl">
+                <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
                     {c.title}
                 </h2>
-                <p className="mt-2 text-pretty text-base text-[color:var(--ink)]/80">{c.outcome}</p>
+                <p className="mt-2 text-pretty text-base text-foreground/80">{c.outcome}</p>
 
                 <div className="mt-5 grid gap-2 md:grid-cols-3">
-                    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-4">
-                        <div className="text-[12px] font-semibold text-[color:var(--ink)]">Timeline</div>
-                        <div className="mt-1 text-sm font-semibold text-[color:var(--mutedText)]">{c.time}</div>
+                    <div className="rounded-2xl border border-border bg-card/80 p-4">
+                        <div className="text-[12px] font-semibold text-foreground">Timeline</div>
+                        <div className="mt-1 text-sm font-semibold text-muted-foreground">{c.time}</div>
                     </div>
-                    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-4">
-                        <div className="text-[12px] font-semibold text-[color:var(--ink)]">Complexity</div>
+                    <div className="rounded-2xl border border-border bg-card/80 p-4">
+                        <div className="text-[12px] font-semibold text-foreground">Complexity</div>
                         <div className="mt-2">
                             <Complexity n={c.complexity} />
                         </div>
                     </div>
-                    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-4">
-                        <div className="text-[12px] font-semibold text-[color:var(--ink)]">Signal</div>
-                        <div className="mt-1 text-sm font-semibold text-[color:var(--mutedText)]">Alignment → execution</div>
+                    <div className="rounded-2xl border border-border bg-card/80 p-4">
+                        <div className="text-[12px] font-semibold text-foreground">Signal</div>
+                        <div className="mt-1 text-sm font-semibold text-muted-foreground">Alignment → execution</div>
                     </div>
                 </div>
 
@@ -665,8 +665,8 @@ function CaseDetail({
                             className={cx(
                                 "rounded-2xl px-3 py-2 text-sm font-semibold transition",
                                 section === x.k
-                                    ? "bg-[color:var(--ink)] text-[color:var(--bg)]"
-                                    : "border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--ink)] hover:bg-[color:var(--pill)]"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "border border-border bg-card text-foreground hover:bg-accent"
                             )}
                         >
                             {x.t}
@@ -681,29 +681,29 @@ function CaseDetail({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 6 }}
                         transition={{ duration: 0.18 }}
-                        className="mt-5 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-5"
+                        className="mt-5 rounded-2xl border border-border bg-card p-5"
                     >
                         {section === "framing" ? (
-                            <div className="space-y-3 text-sm text-[color:var(--ink)]/85">
+                            <div className="space-y-3 text-sm text-foreground/85">
                                 <p>
-                                    <span className="font-semibold text-[color:var(--ink)]">Why it mattered:</span> {c.preview.problem}
+                                    <span className="font-semibold text-foreground">Why it mattered:</span> {c.preview.problem}
                                 </p>
                                 <p>
-                                    <span className="font-semibold text-[color:var(--ink)]">My role:</span> {c.preview.myRole}
+                                    <span className="font-semibold text-foreground">My role:</span> {c.preview.myRole}
                                 </p>
                                 <p>
-                                    <span className="font-semibold text-[color:var(--ink)]">Strategic move:</span> {c.preview.move}
+                                    <span className="font-semibold text-foreground">Strategic move:</span> {c.preview.move}
                                 </p>
                             </div>
                         ) : null}
 
                         {section === "signals" ? (
                             <div>
-                                <div className="text-sm font-semibold text-[color:var(--ink)]">Impact signals</div>
-                                <ul className="mt-3 space-y-2 text-sm text-[color:var(--ink)]/85">
+                                <div className="text-sm font-semibold text-foreground">Impact signals</div>
+                                <ul className="mt-3 space-y-2 text-sm text-foreground/85">
                                     {c.impact.map((x) => (
                                         <li key={x} className="flex gap-2">
-                                            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[color:var(--terra)]" />
+                                            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
                                             <span>{x}</span>
                                         </li>
                                     ))}
@@ -712,21 +712,21 @@ function CaseDetail({
                         ) : null}
 
                         {section === "depth" ? (
-                            <div className="space-y-3 text-sm text-[color:var(--ink)]/85">
-                                <div className="text-sm font-semibold text-[color:var(--ink)]">Optional depth (progressive disclosure)</div>
+                            <div className="space-y-3 text-sm text-foreground/85">
+                                <div className="text-sm font-semibold text-foreground">Optional depth (progressive disclosure)</div>
                                 <div className="grid gap-2 md:grid-cols-3">
                                     {[
-                                        { t: "Tradeoffs", d: "What you didn’t do, and why." },
+                                        { t: "Tradeoffs", d: "What you didn't do, and why." },
                                         { t: "Artifacts", d: "Flows, templates, dashboards." },
-                                        { t: "Lessons", d: "What you’d change next time." },
+                                        { t: "Lessons", d: "What you'd change next time." },
                                     ].map((x) => (
-                                        <div key={x.t} className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-4">
-                                            <div className="text-[12px] font-semibold text-[color:var(--ink)]">{x.t}</div>
-                                            <div className="mt-1 text-sm text-[color:var(--mutedText)]">{x.d}</div>
+                                        <div key={x.t} className="rounded-2xl border border-border bg-card/80 p-4">
+                                            <div className="text-[12px] font-semibold text-foreground">{x.t}</div>
+                                            <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
                                         </div>
                                     ))}
                                 </div>
-                                <p className="text-sm text-[color:var(--mutedText)]">
+                                <p className="text-sm text-muted-foreground">
                                     This keeps the page calm for recruiters but gives product/design leadership a place to go deeper.
                                 </p>
                             </div>
@@ -905,22 +905,7 @@ export default function PortfolioMock({
 
     return (
         <div
-            className="min-h-screen bg-[color:var(--bg)] text-[color:var(--ink)]"
-            style={
-                {
-                    // Theme tokens
-                    // bg: cream, ink: deep slate, accents: sage + terra + sand
-                    "--bg": "#F4F1DE",
-                    "--card": "#FFFFFF",
-                    "--pill": "#FFFFFFCC", // translucent card to keep things airy
-                    "--ink": "#3D405B",
-                    "--mutedText": "#5B5F7A",
-                    "--border": "#3D405B1F",
-                    "--terra": "#E07A5F",
-                    "--sage": "#81B29A",
-                    "--sand": "#F2CC8F",
-                } as React.CSSProperties
-            }
+            className="min-h-screen bg-background text-foreground"
         >
             <AnimatePresence>
                 {cmdOpen ? (
@@ -960,12 +945,12 @@ export default function PortfolioMock({
                                 onSecondary={() => onNavigate("resume")}
                             />
 
-                            <section className="rounded-[2.25rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm md:p-8">
+                            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
                                 <div className="flex items-center justify-between gap-3">
-                                    <h2 className="text-lg font-semibold text-[color:var(--ink)]">Featured case studies</h2>
+                                    <h2 className="text-lg font-semibold text-foreground">Featured case studies</h2>
                                     <button
                                         onClick={() => onNavigate("work")}
-                                        className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-semibold text-[color:var(--ink)] hover:bg-[color:var(--pill)]"
+                                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent"
                                     >
                                         View all
                                         <ArrowUpRight className="h-4 w-4" />
@@ -999,11 +984,11 @@ export default function PortfolioMock({
                             className="space-y-6"
                         >
                             {!selectedCase ? (
-                                <section className="rounded-[2.25rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm md:p-8">
+                                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
                                     <div className="flex flex-wrap items-end justify-between gap-3">
                                         <div>
-                                            <h2 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">Case Studies</h2>
-                                            <p className="mt-2 text-sm text-[color:var(--mutedText)]">
+                                            <h2 className="text-2xl font-semibold tracking-tight text-foreground">Case Studies</h2>
+                                            <p className="mt-2 text-sm text-muted-foreground">
                                                 Note to Aleks, flesh this out more.
                                             </p>
                                         </div>
@@ -1044,29 +1029,29 @@ export default function PortfolioMock({
                             transition={{ duration: 0.18 }}
                             className="space-y-6"
                         >
-                            <section className="rounded-[2.25rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm md:p-8">
+                            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                     <div>
-                                        <h2 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">Resume</h2>
-                                        <p className="mt-2 text-sm text-[color:var(--mutedText)]">Redesign this for better viewability.</p>
+                                        <h2 className="text-2xl font-semibold tracking-tight text-foreground">Resume</h2>
+                                        <p className="mt-2 text-sm text-muted-foreground">Redesign this for better viewability.</p>
                                     </div>
                                     <a
                                         href="/resume.pdf"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--pill)] px-4 py-2 text-sm font-semibold text-[color:var(--ink)] transition hover:-translate-y-0.5"
+                                        className="inline-flex items-center justify-center rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-foreground transition hover:-translate-y-0.5"
                                     >
                                         Download Resume
                                     </a>
                                 </div>
-                                <div className="mt-6 overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)]">
-                                    <div className="flex items-center justify-between border-b border-[color:var(--border)] px-4 py-3">
-                                        <span className="text-sm font-semibold text-[color:var(--ink)]">Resume</span>
+                                <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
+                                    <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                                        <span className="text-sm font-semibold text-foreground">Resume</span>
                                         <a
                                             href="/resume.pdf"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-sm font-medium underline underline-offset-4"
+                                            className="text-sm font-medium text-foreground underline underline-offset-4"
                                         >
                                             Open in new tab
                                         </a>
@@ -1091,16 +1076,16 @@ export default function PortfolioMock({
                                             d: "Clearance-forward positioning with mission constraints in mind.",
                                         },
                                     ].map((x) => (
-                                        <div key={x.t} className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--pill)] p-5">
-                                            <div className="text-sm font-semibold text-[color:var(--ink)]">{x.t}</div>
-                                            <div className="mt-2 text-sm text-[color:var(--mutedText)]">{x.d}</div>
+                                        <div key={x.t} className="rounded-2xl border border-border bg-card/80 p-5">
+                                            <div className="text-sm font-semibold text-foreground">{x.t}</div>
+                                            <div className="mt-2 text-sm text-muted-foreground">{x.d}</div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="mt-6 rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-6">
-                                    <div className="text-sm font-semibold text-[color:var(--ink)]">Resume content placeholder</div>
-                                    <p className="mt-2 text-sm text-[color:var(--mutedText)]">
+                                <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-6">
+                                    <div className="text-sm font-semibold text-foreground">Resume content placeholder</div>
+                                    <p className="mt-2 text-sm text-muted-foreground">
                                         Insert Experience / Education / Clearance / Tools. Keep it scannable.
                                     </p>
                                 </div>
@@ -1117,10 +1102,10 @@ export default function PortfolioMock({
                             transition={{ duration: 0.18 }}
                             className="space-y-6"
                         >
-                            <section className="rounded-[2.25rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm md:p-8">
+                            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
                                 <div>
-                                    <h2 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">Contact</h2>
-                                    <p className="mt-2 text-sm text-[color:var(--mutedText)]">
+                                    <h2 className="text-2xl font-semibold tracking-tight text-foreground">Contact</h2>
+                                    <p className="mt-2 text-sm text-muted-foreground">
                                         Feel free to e-mail or connect through LinkedIn
                                     </p>
                                 </div>
@@ -1128,24 +1113,24 @@ export default function PortfolioMock({
                                 <div className="mt-6 grid gap-3 md:grid-cols-2">
                                     <button
                                         onClick={() => onCopyEmail()}
-                                        className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-5 text-left hover:bg-[color:var(--pill)]"
+                                        className="flex items-center justify-between rounded-2xl border border-border bg-card p-5 text-left hover:bg-accent"
                                     >
                                         <div>
-                                            <div className="text-sm font-semibold text-[color:var(--ink)]">Email</div>
-                                            <div className="mt-1 text-sm text-[color:var(--mutedText)]">{EMAIL}</div>
+                                            <div className="text-sm font-semibold text-foreground">Email</div>
+                                            <div className="mt-1 text-sm text-muted-foreground">{EMAIL}</div>
                                         </div>
-                                        <Copy className="h-4 w-4 text-[color:var(--mutedText)]" />
+                                        <Copy className="h-4 w-4 text-muted-foreground" />
                                     </button>
 
                                     <button
                                         onClick={() => alert("Wire to LinkedIn")}
-                                        className="flex items-center justify-between rounded-2xl bg-[color:var(--ink)] p-5 text-left"
+                                        className="flex items-center justify-between rounded-2xl bg-primary p-5 text-left"
                                     >
                                         <div>
-                                            <div className="text-sm font-semibold text-[color:var(--bg)]">LinkedIn</div>
-                                            <div className="mt-1 text-sm text-[color:var(--bg)]/70">Open profile</div>
+                                            <div className="text-sm font-semibold text-primary-foreground">LinkedIn</div>
+                                            <div className="mt-1 text-sm text-primary-foreground/70">Open profile</div>
                                         </div>
-                                        <ArrowUpRight className="h-4 w-4 text-[color:var(--bg)]" />
+                                        <ArrowUpRight className="h-4 w-4 text-primary-foreground" />
                                     </button>
                                 </div>
                             </section>
@@ -1161,7 +1146,7 @@ export default function PortfolioMock({
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 12 }}
-                        className="fixed bottom-4 left-1/2 z-40 w-[min(520px,92vw)] -translate-x-1/2 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-3 text-sm font-semibold text-[color:var(--ink)] shadow-lg"
+                        className="fixed bottom-4 left-1/2 z-40 w-[min(520px,92vw)] -translate-x-1/2 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground shadow-lg"
                     >
                         {toast.msg}
                     </motion.div>
