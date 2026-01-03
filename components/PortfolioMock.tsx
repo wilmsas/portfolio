@@ -5,8 +5,6 @@ import {
     ArrowUpRight,
     Briefcase,
     FileText,
-    Home,
-    Mail,
     Search,
     Shield,
     Sparkles,
@@ -14,12 +12,11 @@ import {
     ChevronRight,
     Copy,
     Check,
-    ExternalLink,
-    Grid3X3
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { allCaseStudies } from "@/data/case-studies";
 
 /**
  * Portfolio Mock v2 — Non-dashboard, now themed with your Coolors palette:
@@ -36,82 +33,8 @@ import Link from "next/link";
  * Clipboard fix retained: copy can be blocked by Permissions Policy in some embeds.
  */
 
-const NAV = [
-    { key: "home", label: "Home", icon: Home },
-    { key: "work", label: "Case Studies", icon: Briefcase },
-    { key: "resume", label: "Resume", icon: FileText },
-    { key: "contact", label: "Contact", icon: Mail },
-    { key: "skills-matrix", label: "Skills Matrix", href: "/skills-matrix", icon: Grid3X3 },
-
-];
-
-const CASES = [
-    {
-        id: "il5-marketplace",
-        title: "IL5 Marketplace: procurement & approvals",
-        outcome: "Reduced intake cycle time via structured workflow + decision gates",
-        tags: ["Strategy", "Workflow", "IL5", "Stakeholder alignment"],
-        time: "8 weeks",
-        complexity: 4,
-        impact: [
-            "Clarified ownership across contracting / product / vendors",
-            "Introduced decision checkpoints + status transparency",
-            "Standardized intake artifacts (reduced rework)",
-        ],
-        preview: {
-            problem:
-                "Requests were stalling due to unclear ownership, inconsistent artifacts, and hidden status updates.",
-            myRole:
-                "UX strategy + service design + facilitation (aligned contracting, product, engineers).",
-            move:
-                "Turned a vague intake into a gated flow with visible status, defined artifacts, and clear handoffs.",
-        },
-    },
-    {
-        id: "helpdesk-triage",
-        title: "Salesforce Help Desk: requestor experience",
-        outcome: "Improved request clarity with guided intake + status page",
-        tags: ["UX", "Information architecture", "Forms", "Status UX"],
-        time: "3 weeks",
-        complexity: 3,
-        impact: [
-            "Reduced back-and-forth by enforcing category/subcategory logic",
-            "Made SLA / age visible (trust + transparency)",
-            "Created a requestor-facing journey (not just agent tools)",
-        ],
-        preview: {
-            problem:
-                "Agents were triaging well, but requestors had poor visibility and inconsistent descriptions.",
-            myRole: "IA + UX flows + interaction model (Lightning design patterns).",
-            move:
-                "Shifted the experience toward a requestor-first flow: submit → review → status feed.",
-        },
-    },
-    {
-        id: "design-system",
-        title: "Design system governance: arMUI alignment",
-        outcome: "Established adoption path: principles → components → contribution",
-        tags: ["Design systems", "Governance", "Enablement"],
-        time: "4 weeks",
-        complexity: 2,
-        impact: [
-            "Defined contribution model + review cadence",
-            "Aligned product teams on usage standards",
-            "Created education artifacts that reduced inconsistency",
-        ],
-        preview: {
-            problem:
-                "Teams were building UI variations; the system existed but lacked governance and enablement.",
-            myRole: "Strategy + enablement + lightweight governance model.",
-            move:
-                "Made the system feel like the fastest path: templates, docs, and a clear contribution route.",
-        },
-    },
-];
-
-function cx(...classes: Array<string | false | null | undefined>) {
-    return classes.filter(Boolean).join(" ");
-}
+// Use imported case studies data
+const CASES = allCaseStudies;
 
 function useHotkeys(handler: (e: KeyboardEvent) => void) {
     useEffect(() => {
@@ -173,22 +96,6 @@ function Tag({ children }: { children: React.ReactNode }) {
     );
 }
 
-function Complexity({ n }: { n: number }) {
-    const dots = Array.from({ length: 5 }, (_, i) => i < n);
-    return (
-        <div className="flex items-center gap-1" aria-label={`Complexity ${n} of 5`}>
-            {dots.map((on, i) => (
-                <span
-                    key={i}
-                    className={cx(
-                        "h-1.5 w-3 rounded-full",
-                        on ? "bg-primary" : "bg-muted"
-                    )}
-                />
-            ))}
-        </div>
-    );
-}
 
 function Hairline() {
     return <div className="h-px w-full bg-muted" />;
@@ -565,12 +472,8 @@ function CaseRow({
                     </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between text-[12px] text-muted-foreground">
+                <div className="mt-4 flex items-center justify-start text-[12px] text-muted-foreground">
                     <span className="rounded-full border border-border bg-card/80 px-2 py-1">{c.time}</span>
-                    <span className="flex items-center gap-2">
-                        <span className="opacity-70">Complexity</span>
-                        <Complexity n={c.complexity} />
-                    </span>
                 </div>
             </div>
         </Link>
@@ -586,7 +489,6 @@ function CaseDetail({
     onBack: () => void;
     onCopy: (text: string, label: string) => Promise<void>;
 }) {
-    const [section, setSection] = useState<"framing" | "signals" | "depth">("framing");
     const [copied, setCopied] = useState(false);
 
     return (
@@ -596,14 +498,14 @@ function CaseDetail({
                     onClick={onBack}
                     className="rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
                 >
-                    ← Back
+                    ← Back to Case Studies
                 </button>
 
                 <div className="flex items-center gap-2">
                     <button
                         onClick={async () => {
-                            const url = `${window.location.origin}${window.location.pathname}#${c.id}`;
-                            await onCopy(url, "Copy link");
+                            const url = `${window.location.origin}/case-studies/${c.id}`;
+                            await onCopy(url, "Link copied");
                             setCopied(true);
                             setTimeout(() => setCopied(false), 1200);
                         }}
@@ -612,16 +514,10 @@ function CaseDetail({
                         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                         {copied ? "Copied" : "Share"}
                     </button>
-                    <button
-                        onClick={() => alert("Wire this up to a full write-up route / PDF.")}
-                        className="inline-flex items-center gap-2 rounded-2xl bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-95"
-                    >
-                        <ExternalLink className="h-4 w-4" />
-                        Full write-up
-                    </button>
                 </div>
             </div>
 
+            {/* Header Section */}
             <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
                 <div className="flex flex-wrap items-center gap-2">
                     {c.tags.map((t) => (
@@ -629,111 +525,195 @@ function CaseDetail({
                     ))}
                 </div>
 
-                <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+                <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
                     {c.title}
-                </h2>
-                <p className="mt-2 text-pretty text-base text-foreground/80">{c.outcome}</p>
+                </h1>
+                <p className="mt-3 text-pretty text-lg text-foreground/90">{c.outcome}</p>
 
-                <div className="mt-5 grid gap-2 md:grid-cols-3">
+                <div className="mt-6 grid gap-3 md:grid-cols-2">
                     <div className="rounded-2xl border border-border bg-card/80 p-4">
-                        <div className="text-[12px] font-semibold text-foreground">Timeline</div>
-                        <div className="mt-1 text-sm font-semibold text-muted-foreground">{c.time}</div>
+                        <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Timeline</div>
+                        <div className="mt-1 text-base font-semibold text-foreground">{c.time}</div>
                     </div>
                     <div className="rounded-2xl border border-border bg-card/80 p-4">
-                        <div className="text-[12px] font-semibold text-foreground">Complexity</div>
-                        <div className="mt-2">
-                            <Complexity n={c.complexity} />
+                        <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Focus</div>
+                        <div className="mt-1 text-base font-semibold text-foreground">Alignment → execution</div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Executive Summary */}
+            {c.fullContent && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Executive Summary</h2>
+                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
+                        {c.fullContent.executiveSummary}
+                    </p>
+                </section>
+            )}
+
+            {/* Problem Statement */}
+            {c.fullContent && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Problem Statement</h2>
+                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
+                        {c.fullContent.problemStatement}
+                    </p>
+                </section>
+            )}
+
+            {/* Users & Scope */}
+            {c.fullContent?.users && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Users & Scope</h2>
+
+                    <div className="mt-4 space-y-4">
+                        <div>
+                            <h3 className="text-sm font-semibold text-foreground">Primary Users</h3>
+                            <ul className="mt-2 space-y-1">
+                                {c.fullContent.users.primary.map((user, idx) => (
+                                    <li key={idx} className="flex gap-2 text-sm text-foreground/85">
+                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                        <span>{user}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="grid gap-3 md:grid-cols-2">
+                            <div className="rounded-2xl border border-border bg-card/80 p-4">
+                                <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Scale</div>
+                                <div className="mt-1 text-sm text-foreground/85">{c.fullContent.users.scale}</div>
+                            </div>
+                            {c.fullContent.users.environment && (
+                                <div className="rounded-2xl border border-border bg-card/80 p-4">
+                                    <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Environment</div>
+                                    <div className="mt-1 text-sm text-foreground/85">{c.fullContent.users.environment}</div>
+                                </div>
+                            )}
                         </div>
                     </div>
-                    <div className="rounded-2xl border border-border bg-card/80 p-4">
-                        <div className="text-[12px] font-semibold text-foreground">Signal</div>
-                        <div className="mt-1 text-sm font-semibold text-muted-foreground">Alignment → execution</div>
+                </section>
+            )}
+
+            {/* Constraints */}
+            {c.fullContent?.constraints && c.fullContent.constraints.length > 0 && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Key Constraints</h2>
+                    <div className="mt-4 space-y-3">
+                        {c.fullContent.constraints.map((constraint, idx) => (
+                            <div key={idx} className="rounded-2xl border border-border bg-card/80 p-4">
+                                <h3 className="text-sm font-semibold text-foreground">{constraint.title}</h3>
+                                <p className="mt-2 text-sm leading-relaxed text-foreground/85">{constraint.description}</p>
+                            </div>
+                        ))}
                     </div>
-                </div>
+                </section>
+            )}
 
-                <div className="mt-6 flex flex-wrap gap-2">
-                    {(
-                        [
-                            { k: "framing", t: "Decision framing" },
-                            { k: "signals", t: "Impact signals" },
-                            { k: "depth", t: "Optional depth" },
-                        ] as const
-                    ).map((x) => (
-                        <button
-                            key={x.k}
-                            onClick={() => setSection(x.k)}
-                            className={cx(
-                                "rounded-2xl px-3 py-2 text-sm font-semibold transition",
-                                section === x.k
-                                    ? "bg-primary text-primary-foreground"
-                                    : "border border-border bg-card text-foreground hover:bg-accent"
-                            )}
-                        >
-                            {x.t}
-                        </button>
+            {/* Design Strategy */}
+            {c.fullContent?.designStrategy && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Design Strategy</h2>
+                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
+                        {c.fullContent.designStrategy}
+                    </p>
+                </section>
+            )}
+
+            {/* Solution */}
+            {c.fullContent?.solution && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">{c.fullContent.solution.title}</h2>
+                    {c.fullContent.solution.description && (
+                        <p className="mt-3 text-base leading-relaxed text-foreground/85">
+                            {c.fullContent.solution.description}
+                        </p>
+                    )}
+
+                    {c.fullContent.solution.steps && (
+                        <div className="mt-4">
+                            <h3 className="text-sm font-semibold text-foreground">How it worked</h3>
+                            <ol className="mt-3 space-y-2">
+                                {c.fullContent.solution.steps.map((step, idx) => (
+                                    <li key={idx} className="flex gap-3 text-sm text-foreground/85">
+                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                                            {idx + 1}
+                                        </span>
+                                        <span className="pt-0.5">{step}</span>
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
+                    )}
+
+                    {c.fullContent.solution.benefits && (
+                        <div className="mt-4 rounded-2xl border border-border bg-card/80 p-4">
+                            <h3 className="text-sm font-semibold text-foreground">This ensured:</h3>
+                            <ul className="mt-2 space-y-1">
+                                {c.fullContent.solution.benefits.map((benefit, idx) => (
+                                    <li key={idx} className="flex gap-2 text-sm text-foreground/85">
+                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                        <span>{benefit}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {c.fullContent.solution.features && (
+                        <div className="mt-4">
+                            <h3 className="text-sm font-semibold text-foreground">Key Features</h3>
+                            <ul className="mt-3 space-y-2">
+                                {c.fullContent.solution.features.map((feature, idx) => (
+                                    <li key={idx} className="flex gap-2 text-sm text-foreground/85">
+                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </section>
+            )}
+
+            {/* Additional Capabilities */}
+            {c.fullContent?.additionalCapabilities && c.fullContent.additionalCapabilities.length > 0 && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Additional Capabilities</h2>
+                    <ul className="mt-3 space-y-2">
+                        {c.fullContent.additionalCapabilities.map((capability, idx) => (
+                            <li key={idx} className="flex gap-2 text-sm text-foreground/85">
+                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                <span>{capability}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {/* Outcome & Impact */}
+            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                <h2 className="text-xl font-semibold text-foreground">Outcome & Impact</h2>
+                <ul className="mt-4 space-y-2">
+                    {c.impact.map((x, idx) => (
+                        <li key={idx} className="flex gap-2 text-sm text-foreground/85">
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                            <span>{x}</span>
+                        </li>
                     ))}
-                </div>
-
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={section}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.18 }}
-                        className="mt-5 rounded-2xl border border-border bg-card p-5"
-                    >
-                        {section === "framing" ? (
-                            <div className="space-y-3 text-sm text-foreground/85">
-                                <p>
-                                    <span className="font-semibold text-foreground">Why it mattered:</span> {c.preview.problem}
-                                </p>
-                                <p>
-                                    <span className="font-semibold text-foreground">My role:</span> {c.preview.myRole}
-                                </p>
-                                <p>
-                                    <span className="font-semibold text-foreground">Strategic move:</span> {c.preview.move}
-                                </p>
-                            </div>
-                        ) : null}
-
-                        {section === "signals" ? (
-                            <div>
-                                <div className="text-sm font-semibold text-foreground">Impact signals</div>
-                                <ul className="mt-3 space-y-2 text-sm text-foreground/85">
-                                    {c.impact.map((x) => (
-                                        <li key={x} className="flex gap-2">
-                                            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
-                                            <span>{x}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ) : null}
-
-                        {section === "depth" ? (
-                            <div className="space-y-3 text-sm text-foreground/85">
-                                <div className="text-sm font-semibold text-foreground">Optional depth (progressive disclosure)</div>
-                                <div className="grid gap-2 md:grid-cols-3">
-                                    {[
-                                        { t: "Tradeoffs", d: "What you didn't do, and why." },
-                                        { t: "Artifacts", d: "Flows, templates, dashboards." },
-                                        { t: "Lessons", d: "What you'd change next time." },
-                                    ].map((x) => (
-                                        <div key={x.t} className="rounded-2xl border border-border bg-card/80 p-4">
-                                            <div className="text-[12px] font-semibold text-foreground">{x.t}</div>
-                                            <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                    This keeps the page calm for recruiters but gives product/design leadership a place to go deeper.
-                                </p>
-                            </div>
-                        ) : null}
-                    </motion.div>
-                </AnimatePresence>
+                </ul>
             </section>
+
+            {/* Reflection */}
+            {c.fullContent?.reflection && (
+                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                    <h2 className="text-xl font-semibold text-foreground">Reflection</h2>
+                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
+                        {c.fullContent.reflection}
+                    </p>
+                </section>
+            )}
         </div>
     );
 }
@@ -988,8 +968,8 @@ export default function PortfolioMock({
                                     <div className="flex flex-wrap items-end justify-between gap-3">
                                         <div>
                                             <h2 className="text-2xl font-semibold tracking-tight text-foreground">Case Studies</h2>
-                                            <p className="mt-2 text-sm text-muted-foreground">
-                                                Note to Aleks, flesh this out more.
+                                            <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+                                                Defense and government work focused on high-stakes alignment, secure systems, and mission-critical delivery.
                                             </p>
                                         </div>
                                     </div>
