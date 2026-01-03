@@ -22,37 +22,54 @@ export const logtak: CaseStudy = {
   },
   fullContent: {
     executiveSummary:
-      "LOGTAK enabled real-time logistics reporting from infantry squads using ATAK, aggregating supply data through platoon, company, and battalion levels to support operational decision-making.",
+      "LOGTAK transformed supply logistics data capture and analysis by integrating TAK devices (ATAK and WINTAK) into the supply chain workflow. It enabled squad leaders to input supply data directly from their ATAK Android devices via a custom TAK plug-in, which was then aggregated up through command echelons (platoon, company, battalion) and integrated with the ATLAS system. The solution provided real-time, actionable logistics data to support mission-critical decision-making.",
     problemStatement:
-      "Logistics reporting was manual, slow to aggregate, and poorly aligned with infantry workflows. Leaders needed real-time insight without slowing operations.",
+      "Logistics reporting was manual, slow to aggregate, and poorly aligned with infantry workflows. Infantry units lacked real-time supply visibility, and existing systems couldn't integrate with tactical Android devices. Leaders needed real-time insight without slowing operations. Squad leaders had no efficient way to submit LOGSTAT reports, and battalion-level commanders lacked consolidated supply visibility for informed decision-making.",
     users: {
       primary: [
-        "Squad leaders",
-        "Platoon leaders",
-        "Company commanders",
-        "Battalion staff",
+        "Squad leaders (ATAK mobile devices)",
+        "Platoon leaders (review and aggregation)",
+        "Company commanders (consolidated review)",
+        "Battalion staff (strategic decision-making)",
       ],
-      scale: "2CR (Vilseck, Germany)",
-      environment: "Squad → Platoon → Company → Battalion aggregation",
+      scale: "2CR (Vilseck, Germany) — entire unit deployment",
+      environment:
+        "Tactical field operations with hierarchical aggregation: Squad → Platoon → Company → Battalion. High-stakes, multinational exercises (e.g., SABER STRIKE).",
     },
     constraints: [
       {
-        title: "Technical Constraints",
+        title: "Deprecated Android Environment — ATAK Integration",
         description:
-          "ATAK Android environment with deprecated tooling, non-standard design systems, and extreme emphasis on speed and lethality. This required abandoning modern web assumptions.",
+          "The engineering task was extremely difficult because we had to use ATAK Android app functionality which required entirely different design systems and developing in a deprecated environment. We were working with MUI 2 (deprecated tech) while maintaining lethality and operational speed. This required abandoning modern web assumptions and designing within strict TAK UI constraints with extreme emphasis on speed under pressure.",
+      },
+      {
+        title: "Cross-Domain Data Flows",
+        description:
+          "Integration challenges involved substantial cross-domain data flows, real-time updates, and working within a highly secure environment. The design had to be robust enough to manage real-time data connectivity issues without compromising data integrity.",
       },
     ],
     designStrategy:
-      "The strategy centered on respecting infantry workflows, minimizing interaction cost, and ensuring aggregation mirrored command structure.",
+      "The strategy centered on respecting infantry workflows, minimizing interaction cost, and ensuring aggregation mirrored command structure. Conducted in-depth interviews and shadowing sessions with users from squad leaders to brigade commanders to map the end-to-end data collection and aggregation process. This research defined clear user flows for data hand-offs from squad leaders on mobile devices to senior leadership on PCs within TOCs.",
     solution: {
-      title: "ATAK-Native Integration",
+      title: "ATAK-Native Integration with Hierarchical Aggregation",
+      description:
+        "Created front-end designs that enabled squad leaders to take a LOGSTAT, submit it on their ATAK phones, then have a platoon leader combine their squad leaders' reports, review and submit up to the company level which was reviewed and combined of PLT logstats and submitted for the Battalion level to see and make better decisions based on supply levels.",
       features: [
-        "ATAK-native LOGSTAT submission",
-        "Hierarchical aggregation (Squad → PLT → CO → BN)",
-        "UI patterns optimized for speed under pressure",
+        "Custom TAK plug-in for ATAK-native LOGSTAT submission from mobile devices",
+        "Hierarchical aggregation workflow (Squad → PLT → CO → BN)",
+        "Progressive review and combination at each command level",
+        "Integration with ATLAS system for comprehensive logistics visibility",
+        "UI patterns optimized for speed under operational pressure",
+        "Dashboard views for aggregated LOGSTAT data at each echelon",
       ],
     },
+    additionalCapabilities: [
+      "Rapid iteration during multinational exercises (SABER STRIKE) allowed immediate validation and refinement",
+      "Interactive prototypes demonstrated key functionalities including TAK plug-in interface and clear data hand-off flows",
+      "Real-time data connectivity with fallback mechanisms",
+      "Support for both ATAK and WINTAK devices",
+    ],
     reflection:
-      "LOGTAK reinforced that good UX is context-dependent — especially in environments where speed, clarity, and lethality matter more than polish.",
+      "LOGTAK's successful deployment during high-stakes multinational exercises provided real-time, actionable logistics data to support mission-critical decision-making. The product effectively balanced technical integration challenges with a user-friendly design that incorporated on-the-ground use by squads for analysis within high-level Command Centers. This project reinforced that good UX is context-dependent — especially in environments where speed, clarity, and lethality matter more than polish. Working within deprecated technology and austere tactical environments, we proved that effective UX design can succeed even under the most challenging constraints. The integration of TAK data into the broader ATLAS system further amplified the strategic value of our work, making it an exemplary case of user-centric design that delivers on both operational and business fronts.",
   },
 };
