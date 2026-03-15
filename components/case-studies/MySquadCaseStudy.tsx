@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ function Narrow({
   className?: string;
 }) {
   return (
-    <div className={cn("mx-auto max-w-[620px] px-6", className)}>
+    <div className={cn("mx-auto max-w-[620px] px-4 md:px-6", className)}>
       {children}
     </div>
   );
@@ -31,7 +31,7 @@ function Wide({
   className?: string;
 }) {
   return (
-    <div className={cn("mx-auto max-w-[920px] px-6", className)}>
+    <div className={cn("mx-auto max-w-[920px] px-4 md:px-6", className)}>
       {children}
     </div>
   );
@@ -39,13 +39,13 @@ function Wide({
 
 function Divider() {
   return (
-    <div className="mx-auto max-w-[620px] px-6 py-16">
+    <div className="mx-auto max-w-[620px] px-4 py-16 md:px-6">
       <hr className="border-border" />
     </div>
   );
 }
 
-/* ── Animation wrapper ── */
+/* ── Animation wrapper — respects prefers-reduced-motion ── */
 
 function FadeIn({
   children,
@@ -56,6 +56,12 @@ function FadeIn({
   className?: string;
   delay?: number;
 }) {
+  const reduced = useReducedMotion();
+
+  if (reduced) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <m.div
       className={className}
@@ -87,9 +93,9 @@ export default function MySquadCaseStudy() {
       <Narrow className="pt-8 pb-12">
         <Link
           href="/case-studies"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="group inline-flex min-h-[44px] items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-1" />
           Back
         </Link>
       </Narrow>
@@ -102,7 +108,7 @@ export default function MySquadCaseStudy() {
           <h1 className="text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
             Perfecting the squad
           </h1>
-          <p className="mt-4 text-lg text-foreground/60">
+          <p className="mt-4 text-lg text-foreground/70">
             Digitizing Army leadership without losing what makes it human
           </p>
           <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3">
@@ -113,7 +119,7 @@ export default function MySquadCaseStudy() {
               { label: "Launched", value: "AUSA 2021" },
             ].map((item) => (
               <div key={item.label}>
-                <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">
+                <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
                   {item.label}
                 </div>
                 <div className="mt-1 text-sm font-medium text-foreground">
@@ -140,10 +146,7 @@ export default function MySquadCaseStudy() {
       {/* ── Pull-quote ── */}
       <Narrow className="mt-12 text-center">
         <FadeIn>
-          <blockquote
-            className="text-xl italic leading-relaxed text-foreground"
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-          >
+          <blockquote className="font-serif text-xl italic leading-relaxed text-foreground">
             &ldquo;Make a kick-ass app for squad leaders.&rdquo;
           </blockquote>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -185,10 +188,7 @@ export default function MySquadCaseStudy() {
       {/* ── Pull-quote ── */}
       <Narrow className="mt-12 text-center">
         <FadeIn>
-          <blockquote
-            className="text-xl italic leading-relaxed text-foreground"
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-          >
+          <blockquote className="font-serif text-xl italic leading-relaxed text-foreground">
             &ldquo;I&rsquo;d rather PCS to Fort Polk than conduct another 4856
             counseling.&rdquo;
           </blockquote>
@@ -295,7 +295,7 @@ export default function MySquadCaseStudy() {
             </p>
           </div>
 
-          {/* Insight callout */}
+          {/* Insight callout — research finding */}
           <div className="mt-8 rounded-xl border border-border bg-card/60 p-5">
             <p className="text-sm font-medium leading-relaxed text-foreground">
               &ldquo;Squad leaders didn&rsquo;t need another dashboard. They
@@ -332,8 +332,8 @@ export default function MySquadCaseStudy() {
             </p>
           </div>
 
-          {/* Insight callout */}
-          <div className="mt-8 rounded-xl border border-border bg-card/60 p-5">
+          {/* Insight callout — design principle, differentiated with left accent */}
+          <div className="mt-8 rounded-xl border border-primary/20 bg-primary/[0.04] p-5">
             <p className="text-sm font-medium leading-relaxed text-foreground">
               &ldquo;We had to translate a paper-based artifact into a digital
               one without digitizing the interaction itself.&rdquo;
@@ -377,6 +377,7 @@ export default function MySquadCaseStudy() {
             alt="Counseling entry flow showing home screen, new counseling options, and type selection"
             width={1920}
             height={1080}
+            priority
             className="h-auto w-full rounded-lg ring-1 ring-border/40"
           />
         </FadeIn>
@@ -469,8 +470,8 @@ export default function MySquadCaseStudy() {
             DocuSign &mdash; within a government web app.
           </p>
 
-          {/* Stepped timeline with connected dots */}
-          <div className="relative mt-10">
+          {/* Stepped timeline — semantic ordered list */}
+          <ol className="relative mt-10 list-none p-0">
             {[
               {
                 lead: "Counselor completes the session.",
@@ -493,9 +494,12 @@ export default function MySquadCaseStudy() {
                 detail: "Every field compiled into the official form.",
               },
             ].map((step, idx, arr) => (
-              <div key={idx} className="relative flex gap-5 pb-8 last:pb-0">
+              <li key={idx} className="relative flex gap-5 pb-8 last:pb-0">
                 {idx < arr.length - 1 && (
-                  <div className="absolute left-[13px] top-7 h-full w-px bg-primary/20" />
+                  <div
+                    aria-hidden="true"
+                    className="absolute left-[13px] top-7 h-full w-px bg-primary/20"
+                  />
                 )}
                 <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-[11px] tabular-nums text-primary">
                   {idx + 1}
@@ -504,13 +508,13 @@ export default function MySquadCaseStudy() {
                   <strong className="text-foreground">{step.lead}</strong>{" "}
                   {step.detail}
                 </p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </FadeIn>
       </Narrow>
 
-      {/* Bold callout paragraph — NOT in a card */}
+      {/* Bold callout paragraph */}
       <Narrow className="mt-10">
         <FadeIn>
           <p className="text-base font-medium leading-relaxed text-foreground">
