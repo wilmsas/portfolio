@@ -75,7 +75,6 @@ const IMG = {
   counseling: "/images/case-studies/mysquad/01_counseling_entry.png",
   setup: "/images/case-studies/mysquad/02_session_setup.png",
   content: "/images/case-studies/mysquad/03_session_content.png",
-  signatures: "/images/case-studies/mysquad/04_qr_signatures.png",
   accountability: "/images/case-studies/mysquad/05_accountability.png",
 } as const;
 
@@ -510,18 +509,6 @@ export default function MySquadCaseStudy() {
           </div>
         </FadeIn>
       </Narrow>
-
-      <Wide className="mt-10">
-        <FadeIn>
-          <Image
-            src={IMG.signatures}
-            alt="Custom signature block and finger-drawn signature in landscape phone frames"
-            width={1920}
-            height={1080}
-            className="h-auto w-full rounded-lg ring-1 ring-border/40"
-          />
-        </FadeIn>
-      </Wide>
 
       {/* Bold callout paragraph — NOT in a card */}
       <Narrow className="mt-10">
