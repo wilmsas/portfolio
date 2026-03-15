@@ -17,7 +17,7 @@ export interface CaseStudy {
     move: string;
   };
   fullContent?: {
-    executiveSummary: string;
+    executiveSummary?: string;
     problemStatement: string;
     users?: {
       primary: string[];
@@ -38,5 +38,45 @@ export interface CaseStudy {
     };
     additionalCapabilities?: string[];
     reflection?: string;
+
+    // Rich narrative fields
+    brief?: string;
+    discovery?: {
+      description: string;
+      keyInsight: string;
+    };
+    criticalConstraint?: {
+      description: string;
+      tension: string;
+    };
+    counselingFlow?: {
+      intro?: string;
+      phases: Array<{
+        phase: string;
+        description: string;
+        imageKey?: string;
+        caption?: string;
+      }>;
+    };
+    qrHandshake?: {
+      description?: string;
+      steps: string[];
+      imageKey?: string;
+      callout?: string;
+    };
+    accountability?: {
+      description: string;
+      imageKey?: string;
+      caption?: string;
+    };
+    metrics?: Array<{
+      value: string;
+      label: string;
+    }>;
+    images?: Record<string, string>;
+    meta?: {
+      role?: string;
+      scale?: string;
+    };
   };
 }

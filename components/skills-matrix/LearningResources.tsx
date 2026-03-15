@@ -32,15 +32,17 @@ const resourceTypeLabels: Record<ResourceType, string> = {
   framework: "Framework",
 };
 
+// Source badges use the design system's semantic tokens — no raw Tailwind palette colors.
+// All sources share the same token-based treatment for consistency across light/dark modes.
 const sourceColors: Record<ResourceSource, string> = {
-  "NN/g": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  IDF: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  Coursera: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300",
-  "Pivotal Labs": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-  W3C: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
-  HCD: "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300",
-  Book: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
-  Industry: "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300",
+  "NN/g": "bg-secondary text-secondary-foreground border border-border",
+  IDF: "bg-secondary text-secondary-foreground border border-border",
+  Coursera: "bg-secondary text-secondary-foreground border border-border",
+  "Pivotal Labs": "bg-secondary text-secondary-foreground border border-border",
+  W3C: "bg-secondary text-secondary-foreground border border-border",
+  HCD: "bg-secondary text-secondary-foreground border border-border",
+  Book: "bg-secondary text-secondary-foreground border border-border",
+  Industry: "bg-secondary text-secondary-foreground border border-border",
 };
 
 export function LearningResources({ skill }: LearningResourcesProps) {

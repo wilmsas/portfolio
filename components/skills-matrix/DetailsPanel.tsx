@@ -23,7 +23,7 @@ export function DetailsPanel({ skill, level }: DetailsPanelProps) {
       <div className="mt-3 grid grid-cols-[1fr_auto] items-start gap-4 border-t border-border pt-4">
         <div className="min-w-0">
           {skill?.category ? (
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{skill.category}</div>
+            <div className="text-meta font-semibold uppercase tracking-wide text-muted-foreground">{skill.category}</div>
           ) : null}
           <div className="mt-1 text-lg font-semibold leading-tight">{skill?.label ?? "—"}</div>
         </div>

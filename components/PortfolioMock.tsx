@@ -1,39 +1,26 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import {
     ArrowUpRight,
-    Briefcase,
-    FileText,
-    Search,
-    Shield,
-    Sparkles,
+    ArrowLeft,
     X,
-    ChevronRight,
     Copy,
     Check,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { allCaseStudies } from "@/data/case-studies";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
+import { Container } from "@/components/ui/container";
+import { Kbd as KbdUI } from "@/components/ui/kbd";
+import { Tag as TagUI } from "@/components/ui/tag";
+import { Hairline as HairlineUI } from "@/components/ui/hairline";
+import { fadeUp, PAGE_TRANSITION, fadeUpSm, stagger, staggerItem } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
-/**
- * Portfolio Mock v2 — Non-dashboard, now themed with your Coolors palette:
- *   - #F4F1DE (cream)
- *   - #E07A5F (terra cotta)
- *   - #3D405B (deep slate)
- *   - #81B29A (sage)
- *   - #F2CC8F (sand)
- *
- * Implementation note:
- * - Uses CSS variables + Tailwind arbitrary values so you don't need to extend tailwind.config.
- * - Keeps contrast recruiter-safe; accent colors are used sparingly.
- *
- * Clipboard fix retained: copy can be blocked by Permissions Policy in some embeds.
- */
-
-// Use imported case studies data
 const CASES = allCaseStudies;
 
 function useHotkeys(handler: (e: KeyboardEvent) => void) {
@@ -80,35 +67,9 @@ async function safeCopyText(text: string): Promise<boolean> {
     }
 }
 
-function Kbd({ children }: { children: React.ReactNode }) {
-    return (
-        <kbd className="rounded-md border border-border bg-card px-1.5 py-0.5 text-[11px] font-semibold text-muted-foreground shadow-sm">
-            {children}
-        </kbd>
-    );
-}
-
-function Tag({ children }: { children: React.ReactNode }) {
-    return (
-        <span className="inline-flex items-center rounded-full border border-border bg-card/80 px-2.5 py-1 text-[12px] font-medium text-muted-foreground">
-            {children}
-        </span>
-    );
-}
-
-
-function Hairline() {
-    return <div className="h-px w-full bg-muted" />;
-}
-
-function SubtleGlow() {
-    return (
-        <div
-            aria-hidden
-            className="pointer-events-none absolute -top-24 left-1/2 h-56 w-[36rem] -translate-x-1/2 rounded-full bg-gradient-to-b from-[color:var(--sand)]/60 to-transparent blur-3xl"
-        />
-    );
-}
+const Kbd = KbdUI;
+const Tag = TagUI;
+const Hairline = HairlineUI;
 
 function CopyFallbackDialog({
     open,
@@ -132,206 +93,35 @@ function CopyFallbackDialog({
         }
     }, [open]);
 
-    if (!open) return null;
-
     return (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal>
-            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-            <motion.div
-                initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                className="absolute left-1/2 top-24 w-[min(680px,92vw)] -translate-x-1/2 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl"
-            >
-                <div className="flex items-start justify-between gap-3 p-4">
-                    <div>
-                        <div className="text-sm font-semibold text-foreground">{title}</div>
-                        <div className="mt-1 text-[12px] text-muted-foreground">
-                            Copy is blocked in this environment. Select the text below and copy manually.
-                        </div>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
-                    >
-                        <X className="h-4 w-4" /> Close
-                    </button>
-                </div>
-                <Hairline />
-                <div className="p-4">
-                    <input
-                        ref={inputRef}
-                        readOnly
-                        value={text}
-                        className="w-full rounded-2xl border border-border bg-card/80 px-3 py-3 text-sm text-foreground outline-none"
-                    />
-                    <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-muted-foreground">
-                        <span>Tip:</span>
-                        <Kbd>⌘</Kbd>
-                        <span>+</span>
-                        <Kbd>C</Kbd>
-                        <span className="opacity-70">(or Ctrl+C)</span>
+        <Modal open={open} onClose={onClose}>
+            <div className="flex items-start justify-between gap-3 p-4">
+                <div>
+                    <div className="text-sm font-semibold text-foreground">{title}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                        Clipboard access isn&apos;t available. Select the text below and copy it manually.
                     </div>
                 </div>
-            </motion.div>
-        </div>
+                <Button onClick={onClose} variant="outline" size="sm" className="rounded-2xl">
+                    <X className="h-4 w-4" /> Close
+                </Button>
+            </div>
+            <Hairline />
+            <div className="p-4">
+                <Input ref={inputRef} readOnly value={text} className="rounded-2xl bg-card/80" />
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <span>Tip:</span>
+                    <Kbd>⌘</Kbd>
+                    <span>+</span>
+                    <Kbd>C</Kbd>
+                    <span className="opacity-70">(or Ctrl+C)</span>
+                </div>
+            </div>
+        </Modal>
     );
 }
 
-function CommandPalette({
-    open,
-    onClose,
-    onNavigate,
-    onCopyEmail,
-}: {
-    open: boolean;
-    onClose: () => void;
-    onNavigate: (key: string) => void;
-    onCopyEmail: () => Promise<void>;
-}) {
-    const [q, setQ] = useState("");
-    const [copied, setCopied] = useState(false);
-    const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const items = useMemo(() => {
-        const base = [
-            { key: "home", label: "Home", hint: "Navigate" },
-            { key: "route:/case-studies", label: "Case Studies", hint: "Navigate" },
-            { key: "route:/resume", label: "Resume", hint: "Navigate" },
-            { key: "route:/contact", label: "Contact", hint: "Navigate" },
-            { key: "copy:email", label: "Email", hint: "Action" },
-
-            ...CASES.map((c) => ({
-                key: `case:${c.id}`,
-                label: c.title,
-                hint: "Open case study",
-            })),
-        ];
-
-        const term = q.trim().toLowerCase();
-        if (!term) return base;
-        return base.filter((x) => x.label.toLowerCase().includes(term));
-    }, [q]);
-
-
-    useEffect(() => {
-        if (open) {
-            setQ("");
-            setTimeout(() => inputRef.current?.focus(), 50);
-        }
-    }, [open]);
-
-    if (!open) return null;
-
-    return (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal>
-            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-
-            <motion.div
-                initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                className="absolute left-1/2 top-24 w-[min(760px,92vw)] -translate-x-1/2 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl"
-            >
-                <div className="flex items-center gap-2 p-4">
-                    <div className="rounded-2xl border border-border bg-card/80 p-2">
-                        <Search className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                    <input
-                        ref={inputRef}
-                        value={q}
-                        onChange={(e) => setQ(e.target.value)}
-                        placeholder="Search: case studies, resume, contact…"
-                        className="w-full rounded-2xl border border-border bg-card px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-ring"
-                    />
-                    <button
-                        onClick={onClose}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
-                    >
-                        <X className="h-4 w-4" />
-                        Close
-                    </button>
-                </div>
-
-                <Hairline />
-
-                <div className="max-h-[50vh] overflow-auto p-2">
-                    <div className="space-y-1">
-                        {items.map((item) => (
-                            <button
-                                key={item.key}
-                                onClick={async () => {
-                                    // Copy email stays special
-                                    if (item.key === "copy:email") {
-                                        await onCopyEmail();
-                                        setCopied(true);
-                                        setTimeout(() => setCopied(false), 1200);
-                                        return;
-                                    }
-                                    // Route commands (real URLs)
-                                    if (item.key.startsWith("route:")) {
-                                        const path = item.key.replace("route:", "");
-                                        if (path === "/resume") onNavigate("resume");
-                                        if (path === "/contact") onNavigate("contact");
-                                        if (path === "/case-studies") onNavigate("work");
-
-                                        onClose();
-                                        return;
-                                    }
-
-                                    // Default behavior (existing)
-                                    onNavigate(item.key);
-                                    onClose();
-                                }}
-
-                                className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-transparent px-3 py-2 text-left hover:border-border hover:bg-accent"
-                            >
-                                <div>
-                                    <div className="text-sm font-semibold text-foreground">
-                                        {item.label}
-                                    </div>
-                                    <div className="text-[12px] text-muted-foreground">{item.hint}</div>
-                                </div>
-                                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-                            </button>
-                        ))}
-
-                        <AnimatePresence>
-                            {copied ? (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 6 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 6 }}
-                                    className="mx-2 mt-2 rounded-2xl border border-border bg-card/80 p-3 text-sm font-semibold text-foreground"
-                                >
-                                    <span className="inline-flex items-center gap-2">
-                                        <Check className="h-4 w-4" /> Email copied
-                                    </span>
-                                </motion.div>
-                            ) : null}
-                        </AnimatePresence>
-                    </div>
-                </div>
-
-                <Hairline />
-
-                <div className="flex items-center justify-between p-4 text-[12px] text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                        <Kbd>⌘</Kbd>
-                        <Kbd>K</Kbd>
-                        <span className="opacity-70">to open</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Kbd>Esc</Kbd>
-                        <span className="opacity-70">to close</span>
-                    </div>
-                </div>
-            </motion.div>
-        </div>
-    );
-}
 function Hero({
     onPrimary,
     onSecondary,
@@ -340,82 +130,41 @@ function Hero({
     onSecondary: () => void;
 }) {
     return (
-        <section className="relative overflow-hidden rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-10">
-            <SubtleGlow />
-            <div className="relative">
-                <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[12px] font-semibold text-muted-foreground">
-                        <Shield className="h-4 w-4 text-foreground" />
-                        defense / gov fluent
-                    </span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1 text-[12px] font-semibold text-muted-foreground">
-                        <Sparkles className="h-4 w-4 text-primary" />
-                        sharp + exploratory
-                    </span>
-                </div>
+        <Container padding="comfortable">
+            <m.div variants={stagger} initial="hidden" animate="visible">
+                <m.span
+                    variants={staggerItem}
+                    className="inline-flex items-center rounded-full border border-terra-muted-border bg-terra-muted px-3 py-1 text-xs font-medium text-terra-muted-text"
+                >
+                    defense / gov fluent
+                </m.span>
 
-                <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
+                <m.h1
+                    variants={staggerItem}
+                    className="mt-5 text-balance text-3xl font-semibold tracking-tight text-foreground md:text-5xl"
+                >
                     I design decision-ready products—
                     <span className="text-muted-foreground"> turning ambiguity into alignment.</span>
-                </h1>
+                </m.h1>
 
-                <p className="mt-4 max-w-2xl text-pretty text-base text-foreground/80 md:text-lg">
-                    My work is strongest in constrained, high-stakes environments: many stakeholders, unclear ownership, and systems that need
-                    to ship without drama.
-                </p>
+                <m.p
+                    variants={staggerItem}
+                    className="mt-4 max-w-2xl text-pretty text-base text-foreground/80 md:text-lg"
+                >
+                    My work is strongest in constrained, high-stakes environments: many stakeholders, unclear ownership, and systems that need to ship without drama.
+                </m.p>
 
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                    <button
-                        onClick={onPrimary}
-                        className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-95"
-                    >
-                        <Briefcase className="h-4 w-4" />
+                <m.div variants={staggerItem} className="mt-6 flex flex-wrap items-center gap-3">
+                    <Button onClick={onPrimary} className="rounded-2xl" size="lg">
                         View case studies
                         <ArrowUpRight className="h-4 w-4" />
-                    </button>
-                    <button
-                        onClick={onSecondary}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent"
-                    >
-                        <FileText className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                    <Button onClick={onSecondary} variant="outline" className="rounded-2xl" size="lg">
                         Resume
-                        <ArrowUpRight className="h-4 w-4" />
-                    </button>
-                    <div className="text-[12px] font-semibold text-muted-foreground">
-                        Tip: <Kbd>⌘</Kbd> <Kbd>K</Kbd>
-                    </div>
-                </div>
-
-                <div className="mt-8 grid gap-2 sm:grid-cols-2">
-                    {[
-                        {
-                            t: "Alignment",
-                            d: "Translate competing priorities into shared language + decisions.",
-                        },
-                        {
-                            t: "Structure",
-                            d: "Turn ambiguity into flows, artifacts, and clear ownership.",
-                        },
-                        {
-                            t: "Execution",
-                            d: "Ship the minimum system that changes outcomes.",
-                        },
-                        {
-                            t: "Signal",
-                            d: "Outcomes first. Depth on demand. No portfolio theater.",
-                        },
-                    ].map((x) => (
-                        <div
-                            key={x.t}
-                            className="rounded-2xl border border-border bg-card/80 p-4"
-                        >
-                            <div className="text-[12px] font-semibold text-foreground">{x.t}</div>
-                            <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
+                    </Button>
+                </m.div>
+            </m.div>
+        </Container>
     );
 }
 
@@ -438,27 +187,13 @@ function CaseRow({
                 // update local UI state, but let Link handle navigation
                 onOpen();
             }}
-
-            className="group relative block w-full rounded-[1.75rem] p-[1px] text-left transition hover:-translate-y-0.5"
+            className="group flex h-full w-full flex-col text-left"
         >
-            {/* Animated border ring */}
-            <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-r from-primary/60 via-primary to-primary/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            />
-
-            {/* Card */}
-            <div className="relative rounded-[1.7rem] border border-border bg-card p-5 shadow-sm">
-                <div className="flex items-start justify-between gap-4">
+            <div className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-border/60 hover:shadow-card-hover">
+                <div className="flex flex-1 items-start justify-between gap-4">
                     <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="truncate text-sm font-semibold text-foreground">{c.title}</h3>
-                            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1 text-[11px] font-semibold text-muted-foreground">
-                                <Shield className="h-3 w-3 text-primary" />
-                                defense-ready
-                            </span>
-                        </div>
-                        <p className="mt-2 text-sm text-foreground/80">{c.outcome}</p>
+                        <h3 className="text-sm font-semibold text-foreground">{c.title}</h3>
+                        <p className="mt-2 line-clamp-2 text-sm text-foreground/80">{c.outcome}</p>
 
                         <div className="mt-3 flex flex-wrap items-center gap-2">
                             {c.tags.slice(0, 4).map((t) => (
@@ -472,11 +207,67 @@ function CaseRow({
                     </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-start text-[12px] text-muted-foreground">
+                <div className="mt-4 flex items-center justify-start text-xs text-muted-foreground">
                     <span className="rounded-full border border-border bg-card/80 px-2 py-1">{c.time}</span>
                 </div>
             </div>
         </Link>
+    );
+}
+
+/** Render multi-paragraph text split on blank lines. */
+function Paras({ text }: { text: string }) {
+    return (
+        <>
+            {text.split("\n\n").filter(Boolean).map((para, i) => (
+                <p key={i} className={`${i > 0 ? "mt-4" : "mt-3"} text-base leading-relaxed text-foreground/85`}>
+                    {para}
+                </p>
+            ))}
+        </>
+    );
+}
+
+function CaseImage({
+    images,
+    imageKey,
+    caption,
+    variant = "default",
+}: {
+    images?: Record<string, string>;
+    imageKey?: string;
+    caption?: string;
+    variant?: "default" | "hero";
+}) {
+    if (!imageKey || !images?.[imageKey]) return null;
+    return (
+        <figure className={cn("mt-8", variant === "hero" && "-mx-1 md:-mx-4")}>
+            <img
+                src={images[imageKey]}
+                alt={caption || imageKey}
+                className={cn(
+                    "block max-w-full rounded-lg mx-auto",
+                    variant === "hero"
+                        ? "h-auto w-full max-h-[36rem] object-contain"
+                        : "h-auto w-full max-h-[28rem] object-contain",
+                )}
+                loading="lazy"
+            />
+            {caption && (
+                <figcaption className="mt-3 text-center text-sm text-muted-foreground">
+                    {caption}
+                </figcaption>
+            )}
+        </figure>
+    );
+}
+
+function Section({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <section className="border-t border-border pt-12 pb-8">
+            <p className="mb-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">{label}</p>
+            {children}
+        </section>
     );
 }
 
@@ -490,229 +281,363 @@ function CaseDetail({
     onCopy: (text: string, label: string) => Promise<void>;
 }) {
     const [copied, setCopied] = useState(false);
+    const imgs = c.fullContent?.images;
+    const hasRichContent = !!c.fullContent?.brief;
 
     return (
-        <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <button
-                    onClick={onBack}
-                    className="rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
+        <div>
+            {/* ── Nav bar ── */}
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                <Button onClick={onBack} variant="ghost" className="rounded-2xl text-muted-foreground hover:text-foreground">
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                </Button>
+                <Button
+                    onClick={async () => {
+                        const origin = typeof window !== "undefined" ? window.location.origin : "";
+                        const url = `${origin}/case-studies/${c.id}`;
+                        await onCopy(url, "Link");
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 1200);
+                    }}
+                    variant="ghost"
+                    className="rounded-2xl text-muted-foreground hover:text-foreground"
                 >
-                    ← Back to Case Studies
-                </button>
-
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={async () => {
-                            const url = `${window.location.origin}/case-studies/${c.id}`;
-                            await onCopy(url, "Link copied");
-                            setCopied(true);
-                            setTimeout(() => setCopied(false), 1200);
-                        }}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent"
-                    >
-                        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        {copied ? "Copied" : "Share"}
-                    </button>
-                </div>
+                    <AnimatePresence mode="wait" initial={false}>
+                        {copied ? (
+                            <m.span key="check" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }} transition={{ duration: 0.12 }}>
+                                <Check className="h-4 w-4" />
+                            </m.span>
+                        ) : (
+                            <m.span key="copy" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }} transition={{ duration: 0.12 }}>
+                                <Copy className="h-4 w-4" />
+                            </m.span>
+                        )}
+                    </AnimatePresence>
+                    {copied ? "Copied" : "Share"}
+                </Button>
             </div>
 
-            {/* Header Section */}
-            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                <div className="flex flex-wrap items-center gap-2">
-                    {c.tags.map((t) => (
-                        <Tag key={t}>{t}</Tag>
-                    ))}
-                </div>
-
-                <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-                    {c.title}
-                </h1>
-                <p className="mt-3 text-pretty text-lg text-foreground/90">{c.outcome}</p>
-
-                <div className="mt-6 grid gap-3 md:grid-cols-2">
-                    <div className="rounded-2xl border border-border bg-card/80 p-4">
-                        <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Timeline</div>
-                        <div className="mt-1 text-base font-semibold text-foreground">{c.time}</div>
-                    </div>
-                    <div className="rounded-2xl border border-border bg-card/80 p-4">
-                        <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Focus</div>
-                        <div className="mt-1 text-base font-semibold text-foreground">Alignment → execution</div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Executive Summary */}
-            {c.fullContent && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Executive Summary</h2>
-                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
-                        {c.fullContent.executiveSummary}
-                    </p>
-                </section>
-            )}
-
-            {/* Problem Statement */}
-            {c.fullContent && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Problem Statement</h2>
-                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
-                        {c.fullContent.problemStatement}
-                    </p>
-                </section>
-            )}
-
-            {/* Users & Scope */}
-            {c.fullContent?.users && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Users & Scope</h2>
-
-                    <div className="mt-4 space-y-4">
-                        <div>
-                            <h3 className="text-sm font-semibold text-foreground">Primary Users</h3>
-                            <ul className="mt-2 space-y-1">
-                                {c.fullContent.users.primary.map((user, idx) => (
-                                    <li key={idx} className="flex gap-2 text-sm text-foreground/85">
-                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                                        <span>{user}</span>
-                                    </li>
-                                ))}
-                            </ul>
+            {hasRichContent ? (
+                /* ─────────────────────────────────────────────
+                   EDITORIAL layout — rich case studies
+                ───────────────────────────────────────────── */
+                <article>
+                    {/* Hero — no card, just big type */}
+                    <header className="pb-10">
+                        <div className="mb-5 flex flex-wrap gap-2">
+                            {c.tags.map((t) => <Tag key={t}>{t}</Tag>)}
                         </div>
-
-                        <div className="grid gap-3 md:grid-cols-2">
-                            <div className="rounded-2xl border border-border bg-card/80 p-4">
-                                <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Scale</div>
-                                <div className="mt-1 text-sm text-foreground/85">{c.fullContent.users.scale}</div>
+                        <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
+                            {c.title}
+                        </h1>
+                        <p className="mt-4 max-w-2xl text-pretty text-lg text-foreground/60">
+                            {c.outcome}
+                        </p>
+                        {/* Meta — flat key-value pairs, no card borders */}
+                        <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+                            <div>
+                                <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">Timeline</div>
+                                <div className="mt-1 text-sm font-medium text-foreground">{c.time}</div>
                             </div>
-                            {c.fullContent.users.environment && (
-                                <div className="rounded-2xl border border-border bg-card/80 p-4">
-                                    <div className="text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">Environment</div>
-                                    <div className="mt-1 text-sm text-foreground/85">{c.fullContent.users.environment}</div>
+                            {c.fullContent?.meta?.role && (
+                                <div>
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">Role</div>
+                                    <div className="mt-1 text-sm font-medium text-foreground">{c.fullContent.meta.role}</div>
+                                </div>
+                            )}
+                            {c.fullContent?.meta?.scale && (
+                                <div>
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">Scale</div>
+                                    <div className="mt-1 text-sm font-medium text-foreground">{c.fullContent.meta.scale}</div>
                                 </div>
                             )}
                         </div>
-                    </div>
-                </section>
-            )}
+                    </header>
 
-            {/* Constraints */}
-            {c.fullContent?.constraints && c.fullContent.constraints.length > 0 && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Key Constraints</h2>
-                    <div className="mt-4 space-y-3">
-                        {c.fullContent.constraints.map((constraint, idx) => (
-                            <div key={idx} className="rounded-2xl border border-border bg-card/80 p-4">
-                                <h3 className="text-sm font-semibold text-foreground">{constraint.title}</h3>
-                                <p className="mt-2 text-sm leading-relaxed text-foreground/85">{constraint.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {/* Design Strategy */}
-            {c.fullContent?.designStrategy && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Design Strategy</h2>
-                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
-                        {c.fullContent.designStrategy}
-                    </p>
-                </section>
-            )}
-
-            {/* Solution */}
-            {c.fullContent?.solution && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">{c.fullContent.solution.title}</h2>
-                    {c.fullContent.solution.description && (
-                        <p className="mt-3 text-base leading-relaxed text-foreground/85">
-                            {c.fullContent.solution.description}
-                        </p>
+                    {/* Brief — flows from hero, no label */}
+                    {c.fullContent?.brief && (
+                        <section className="border-t border-border pt-10 pb-6">
+                            <Paras text={c.fullContent.brief} />
+                        </section>
                     )}
 
-                    {c.fullContent.solution.steps && (
-                        <div className="mt-4">
-                            <h3 className="text-sm font-semibold text-foreground">How it worked</h3>
-                            <ol className="mt-3 space-y-2">
-                                {c.fullContent.solution.steps.map((step, idx) => (
-                                    <li key={idx} className="flex gap-3 text-sm text-foreground/85">
-                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                                            {idx + 1}
+                    {/* The Problem — users integrated */}
+                    {c.fullContent?.problemStatement && (
+                        <Section label="The Problem">
+                            <Paras text={c.fullContent.problemStatement} />
+                            {c.fullContent.users && (
+                                <div className="mt-8">
+                                    <div className="space-y-4">
+                                        {c.fullContent.users.primary.map((user, idx) => (
+                                            <p key={idx} className="text-base leading-relaxed text-foreground/85">{user}</p>
+                                        ))}
+                                    </div>
+                                    {c.fullContent.users.environment && (
+                                        <p className="mt-5 text-base leading-relaxed text-foreground/60">
+                                            {c.fullContent.users.environment}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                        </Section>
+                    )}
+
+                    {/* Discovery */}
+                    {c.fullContent?.discovery && (
+                        <Section label="Discovery & Research">
+                            <Paras text={c.fullContent.discovery.description} />
+                            <blockquote className="mt-10 border-l-2 border-primary pl-6">
+                                <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-primary/60">Key Insight</p>
+                                <p className="text-xl font-medium leading-relaxed text-foreground">
+                                    {c.fullContent.discovery.keyInsight}
+                                </p>
+                            </blockquote>
+                        </Section>
+                    )}
+
+                    {/* Critical constraint */}
+                    {c.fullContent?.criticalConstraint && (
+                        <Section label="The Constraint That Shaped Everything">
+                            <Paras text={c.fullContent.criticalConstraint.description} />
+                            <blockquote className="mt-10 border-l-2 border-border pl-6">
+                                <p className="text-xl font-medium leading-relaxed text-foreground">
+                                    {c.fullContent.criticalConstraint.tension}
+                                </p>
+                            </blockquote>
+                        </Section>
+                    )}
+
+                    {/* Counseling Flow — BOLD: images are the star */}
+                    {c.fullContent?.counselingFlow && (
+                        <Section label="Counseling Flow">
+                            {c.fullContent.counselingFlow.intro && (
+                                <p className="mb-10 text-base leading-relaxed text-foreground/85">
+                                    {c.fullContent.counselingFlow.intro}
+                                </p>
+                            )}
+                            {c.fullContent.counselingFlow.phases.map((phase, idx) => (
+                                <div key={idx} className={idx > 0 ? "mt-12" : ""}>
+                                    <div className="mb-4 flex items-center gap-3">
+                                        <span className="font-mono text-[11px] tabular-nums text-muted-foreground/30">
+                                            {String(idx + 1).padStart(2, "0")}
                                         </span>
-                                        <span className="pt-0.5">{step}</span>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
+                                        <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70">
+                                            {phase.phase.replace(/^Phase \d+[: \u2014]+/, "")}
+                                        </span>
+                                    </div>
+                                    <p className="text-base leading-relaxed text-foreground/85">{phase.description}</p>
+                                    <CaseImage images={imgs} imageKey={phase.imageKey} caption={phase.caption} variant="hero" />
+                                </div>
+                            ))}
+                        </Section>
                     )}
 
-                    {c.fullContent.solution.benefits && (
-                        <div className="mt-4 rounded-2xl border border-border bg-card/80 p-4">
-                            <h3 className="text-sm font-semibold text-foreground">This ensured:</h3>
-                            <ul className="mt-2 space-y-1">
-                                {c.fullContent.solution.benefits.map((benefit, idx) => (
-                                    <li key={idx} className="flex gap-2 text-sm text-foreground/85">
-                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                                        <span>{benefit}</span>
-                                    </li>
+                    {/* QR Handshake — BOLD: visual peak, tinted background */}
+                    {c.fullContent?.qrHandshake && (
+                        <section className="-mx-4 mt-2 rounded-2xl border border-primary/[0.08] bg-primary/[0.03] px-4 pb-10 pt-10 md:-mx-8 md:px-8">
+                            <p className="mb-8 font-mono text-[10px] uppercase tracking-widest text-primary/50">The QR Handshake</p>
+                            {c.fullContent.qrHandshake.description && (
+                                <Paras text={c.fullContent.qrHandshake.description} />
+                            )}
+                            <div className="mt-8 space-y-6">
+                                {c.fullContent.qrHandshake.steps.map((step, idx) => (
+                                    <div key={idx} className="flex gap-5">
+                                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-[11px] tabular-nums text-primary">
+                                            {idx + 1}
+                                        </div>
+                                        <p className="pt-0.5 text-base leading-relaxed text-foreground/85">{step}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <CaseImage images={imgs} imageKey={c.fullContent.qrHandshake.imageKey} variant="hero" />
+                            {c.fullContent.qrHandshake.callout && (
+                                <div className="mt-10 rounded-xl border border-primary/[0.12] bg-primary/[0.06] p-6">
+                                    <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-primary/50">Why this matters</p>
+                                    <p className="text-base leading-relaxed text-foreground/90">
+                                        {c.fullContent.qrHandshake.callout}
+                                    </p>
+                                </div>
+                            )}
+                        </section>
+                    )}
+
+                    {/* Accountability */}
+                    {c.fullContent?.accountability && (
+                        <Section label="Squad Accountability">
+                            <Paras text={c.fullContent.accountability.description} />
+                            <CaseImage images={imgs} imageKey={c.fullContent.accountability.imageKey} caption={c.fullContent.accountability.caption} />
+                        </Section>
+                    )}
+
+                    {/* Reflection */}
+                    {c.fullContent?.reflection && (
+                        <Section label="Reflection">
+                            <Paras text={c.fullContent.reflection} />
+                        </Section>
+                    )}
+                </article>
+            ) : (
+                /* ─────────────────────────────────────────────
+                   LEGACY card-based layout
+                ───────────────────────────────────────────── */
+                <div className="space-y-6">
+                    <Container>
+                        <div className="flex flex-wrap items-center gap-2">
+                            {c.tags.map((t) => <Tag key={t}>{t}</Tag>)}
+                        </div>
+                        <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                            {c.title}
+                        </h1>
+                        <p className="mt-3 text-pretty text-lg text-foreground/70">{c.outcome}</p>
+                        <div className="mt-6 grid grid-cols-2 gap-2 md:grid-cols-2">
+                            {[
+                                { label: "Timeline", value: c.time },
+                                { label: "Focus", value: "Alignment \u2192 execution" },
+                            ].map((item) => (
+                                <div key={item.label} className="rounded-xl border border-border bg-background/60 px-3 py-2.5">
+                                    <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70">{item.label}</div>
+                                    <div className="mt-0.5 text-sm font-semibold text-foreground">{item.value}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </Container>
+
+                    {c.fullContent?.executiveSummary && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Executive Summary</h2>
+                            <Paras text={c.fullContent.executiveSummary} />
+                        </Container>
+                    )}
+
+                    {c.fullContent && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">The Problem</h2>
+                            <Paras text={c.fullContent.problemStatement} />
+                        </Container>
+                    )}
+
+                    {c.fullContent?.users && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Users & Environment</h2>
+                            <ul className="mt-4 space-y-3">
+                                {c.fullContent.users.primary.map((user, idx) => (
+                                    <li key={idx} className="text-sm leading-relaxed text-foreground/80">{user}</li>
                                 ))}
                             </ul>
-                        </div>
+                            <div className="mt-4 grid gap-3 md:grid-cols-2">
+                                <div className="rounded-xl border border-border bg-card/80 p-4">
+                                    <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Scale</div>
+                                    <div className="mt-1 text-sm text-foreground/80">{c.fullContent.users.scale}</div>
+                                </div>
+                                {c.fullContent.users.environment && (
+                                    <div className="rounded-xl border border-border bg-card/80 p-4">
+                                        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Environment</div>
+                                        <div className="mt-1 text-sm text-foreground/80">{c.fullContent.users.environment}</div>
+                                    </div>
+                                )}
+                            </div>
+                        </Container>
                     )}
 
-                    {c.fullContent.solution.features && (
-                        <div className="mt-4">
-                            <h3 className="text-sm font-semibold text-foreground">Key Features</h3>
+                    {c.fullContent?.constraints && c.fullContent.constraints.length > 0 && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Key Constraints</h2>
+                            <div className="mt-4 space-y-3">
+                                {c.fullContent.constraints.map((constraint, idx) => (
+                                    <div key={idx} className="rounded-xl border border-border bg-card/80 p-4">
+                                        <h3 className="text-sm font-semibold text-foreground">{constraint.title}</h3>
+                                        <p className="mt-2 text-sm leading-relaxed text-foreground/80">{constraint.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </Container>
+                    )}
+
+                    {c.fullContent?.designStrategy && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Design Strategy</h2>
+                            <p className="mt-3 text-base leading-relaxed text-foreground/80">{c.fullContent.designStrategy}</p>
+                        </Container>
+                    )}
+
+                    {c.fullContent?.solution && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">{c.fullContent.solution.title}</h2>
+                            {c.fullContent.solution.description && (
+                                <p className="mt-3 text-base leading-relaxed text-foreground/80">{c.fullContent.solution.description}</p>
+                            )}
+                            {c.fullContent.solution.steps && (
+                                <ol className="mt-4 space-y-2">
+                                    {c.fullContent.solution.steps.map((step, idx) => (
+                                        <li key={idx} className="flex gap-3 text-sm text-foreground/80">
+                                            <span className="w-4 shrink-0 pt-0.5 text-xs font-medium tabular-nums text-muted-foreground/60">{idx + 1}.</span>
+                                            <span>{step}</span>
+                                        </li>
+                                    ))}
+                                </ol>
+                            )}
+                            {c.fullContent.solution.benefits && (
+                                <div className="mt-4 rounded-xl border border-border bg-card/80 p-4">
+                                    <h3 className="text-sm font-semibold text-foreground">This ensured:</h3>
+                                    <ul className="mt-2 space-y-1">
+                                        {c.fullContent.solution.benefits.map((benefit, idx) => (
+                                            <li key={idx} className="flex gap-2 text-sm text-foreground/80">
+                                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
+                                                <span>{benefit}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            {c.fullContent.solution.features && (
+                                <ul className="mt-4 space-y-2">
+                                    {c.fullContent.solution.features.map((feature, idx) => (
+                                        <li key={idx} className="flex gap-2 text-sm text-foreground/80">
+                                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </Container>
+                    )}
+
+                    {c.fullContent?.additionalCapabilities && c.fullContent.additionalCapabilities.length > 0 && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Additional Capabilities</h2>
                             <ul className="mt-3 space-y-2">
-                                {c.fullContent.solution.features.map((feature, idx) => (
-                                    <li key={idx} className="flex gap-2 text-sm text-foreground/85">
-                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                                        <span>{feature}</span>
+                                {c.fullContent.additionalCapabilities.map((capability, idx) => (
+                                    <li key={idx} className="flex gap-2 text-sm text-foreground/80">
+                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
+                                        <span>{capability}</span>
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </Container>
                     )}
-                </section>
-            )}
 
-            {/* Additional Capabilities */}
-            {c.fullContent?.additionalCapabilities && c.fullContent.additionalCapabilities.length > 0 && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Additional Capabilities</h2>
-                    <ul className="mt-3 space-y-2">
-                        {c.fullContent.additionalCapabilities.map((capability, idx) => (
-                            <li key={idx} className="flex gap-2 text-sm text-foreground/85">
-                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                                <span>{capability}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
+                    {c.impact.length > 0 && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Outcome & Impact</h2>
+                            <ul className="mt-4 space-y-2">
+                                {c.impact.map((x, idx) => (
+                                    <li key={idx} className="flex gap-2 text-sm text-foreground/80">
+                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
+                                        <span>{x}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Container>
+                    )}
 
-            {/* Outcome & Impact */}
-            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                <h2 className="text-xl font-semibold text-foreground">Outcome & Impact</h2>
-                <ul className="mt-4 space-y-2">
-                    {c.impact.map((x, idx) => (
-                        <li key={idx} className="flex gap-2 text-sm text-foreground/85">
-                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                            <span>{x}</span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
-
-            {/* Reflection */}
-            {c.fullContent?.reflection && (
-                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                    <h2 className="text-xl font-semibold text-foreground">Reflection</h2>
-                    <p className="mt-3 text-base leading-relaxed text-foreground/85">
-                        {c.fullContent.reflection}
-                    </p>
-                </section>
+                    {c.fullContent?.reflection && (
+                        <Container>
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Reflection</h2>
+                            <Paras text={c.fullContent.reflection} />
+                        </Container>
+                    )}
+                </div>
             )}
         </div>
     );
@@ -743,7 +668,6 @@ export default function PortfolioMock({
     });
     const [caseId, setCaseId] = useState<string | null>(
         initialCaseId ?? null);
-    const [cmdOpen, setCmdOpen] = useState(false);
 
 
     // Clipboard fallback UI
@@ -752,6 +676,13 @@ export default function PortfolioMock({
     const [copyFallbackTitle, setCopyFallbackTitle] = useState("Copy");
 
     const [toast, setToast] = useState<null | { msg: string }>(null);
+    const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         // Case studies: keep active + caseId in sync with URL
@@ -791,14 +722,7 @@ export default function PortfolioMock({
 
 
     useHotkeys((e) => {
-        const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
-        if (isCmdK) {
-            e.preventDefault();
-            setCmdOpen(true);
-            return;
-        }
         if (e.key === "Escape") {
-            setCmdOpen(false);
             setCopyFallbackOpen(false);
         }
     });
@@ -857,8 +781,9 @@ export default function PortfolioMock({
     const onCopy = async (text: string, label: string) => {
         const ok = await safeCopyText(text);
         if (ok) {
-            setToast({ msg: `${label}: copied` });
-            window.setTimeout(() => setToast(null), 1400);
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+            setToast({ msg: `${label} copied` });
+            toastTimerRef.current = setTimeout(() => setToast(null), 1400);
             return;
         }
         // Clipboard blocked → show manual copy dialog
@@ -887,16 +812,6 @@ export default function PortfolioMock({
         <div
             className="min-h-screen bg-background text-foreground"
         >
-            <AnimatePresence>
-                {cmdOpen ? (
-                    <CommandPalette
-                        open={cmdOpen}
-                        onClose={() => setCmdOpen(false)}
-                        onNavigate={onNavigate}
-                        onCopyEmail={onCopyEmail}
-                    />
-                ) : null}
-            </AnimatePresence>
 
             <AnimatePresence>
                 {copyFallbackOpen ? (
@@ -912,12 +827,10 @@ export default function PortfolioMock({
             <main className="mx-auto max-w-5xl px-4 py-8 md:py-12">
                 <AnimatePresence mode="wait">
                     {active === "home" ? (
-                        <motion.div
+                        <m.div
                             key="home"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 6 }}
-                            transition={{ duration: 0.18 }}
+                            {...fadeUp}
+                            transition={PAGE_TRANSITION}
                             className="space-y-6"
                         >
                             <Hero
@@ -925,68 +838,80 @@ export default function PortfolioMock({
                                 onSecondary={() => onNavigate("resume")}
                             />
 
-                            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                            <Container>
                                 <div className="flex items-center justify-between gap-3">
                                     <h2 className="text-lg font-semibold text-foreground">Featured case studies</h2>
-                                    <button
+                                    <Button
                                         onClick={() => onNavigate("work")}
-                                        className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent"
+                                        variant="outline"
+                                        className="rounded-2xl"
                                     >
                                         View all
                                         <ArrowUpRight className="h-4 w-4" />
-                                    </button>
+                                    </Button>
                                 </div>
 
-                                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                                <m.div
+                                    className="mt-4 grid gap-3 md:grid-cols-2"
+                                    variants={stagger}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
                                     {CASES.slice(0, 2).map((c) => (
-                                        <CaseRow
-                                            key={c.id}
-                                            c={c}
-                                            href={`/case-studies/${c.id}`}
-                                            onOpen={() => {
-                                                setActive("work");
-                                                setCaseId(c.id);
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            </section>
-                        </motion.div>
-                    ) : null}
-
-                    {active === "work" ? (
-                        <motion.div
-                            key="work"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 6 }}
-                            transition={{ duration: 0.18 }}
-                            className="space-y-6"
-                        >
-                            {!selectedCase ? (
-                                <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
-                                    <div className="flex flex-wrap items-end justify-between gap-3">
-                                        <div>
-                                            <h2 className="text-2xl font-semibold tracking-tight text-foreground">Case Studies</h2>
-                                            <p className="mt-2 max-w-2xl text-base text-muted-foreground">
-                                                Defense and government work focused on high-stakes alignment, secure systems, and mission-critical delivery.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-6 space-y-3">
-                                        {CASES.map((c) => (
+                                        <m.div key={c.id} variants={staggerItem} className="h-full">
                                             <CaseRow
-                                                key={c.id}
                                                 c={c}
                                                 href={`/case-studies/${c.id}`}
                                                 onOpen={() => {
                                                     setActive("work");
                                                     setCaseId(c.id);
-                                                }} />
-                                        ))}
+                                                }}
+                                            />
+                                        </m.div>
+                                    ))}
+                                </m.div>
+                            </Container>
+                        </m.div>
+                    ) : null}
+
+                    {active === "work" ? (
+                        <m.div
+                            key="work"
+                            {...fadeUp}
+                            transition={PAGE_TRANSITION}
+                            className="space-y-6"
+                        >
+                            {!selectedCase ? (
+                                <Container>
+                                    <div className="flex flex-wrap items-end justify-between gap-3">
+                                        <div>
+                                            <h2 className="text-2xl font-semibold tracking-tight text-foreground">Case Studies</h2>
+                                            <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+                                                Design work in defense and government — from discovery and alignment through to execution.
+                                            </p>
+                                        </div>
                                     </div>
-                                </section>
+
+                                    <m.div
+                                        className="mt-6 space-y-3"
+                                        variants={stagger}
+                                        initial="hidden"
+                                        animate="visible"
+                                    >
+                                        {CASES.map((c) => (
+                                            <m.div key={c.id} variants={staggerItem}>
+                                                <CaseRow
+                                                    c={c}
+                                                    href={`/case-studies/${c.id}`}
+                                                    onOpen={() => {
+                                                        setActive("work");
+                                                        setCaseId(c.id);
+                                                    }}
+                                                />
+                                            </m.div>
+                                        ))}
+                                    </m.div>
+                                </Container>
                             ) : (
                                 <CaseDetail
                                     c={selectedCase}
@@ -997,32 +922,35 @@ export default function PortfolioMock({
                                     onCopy={onCopy}
                                 />
                             )}
-                        </motion.div>
+                        </m.div>
                     ) : null}
 
                     {active === "resume" ? (
-                        <motion.div
+                        <m.div
                             key="resume"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 6 }}
-                            transition={{ duration: 0.18 }}
+                            {...fadeUp}
+                            transition={PAGE_TRANSITION}
                             className="space-y-6"
                         >
-                            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                            <Container>
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                     <div>
                                         <h2 className="text-2xl font-semibold tracking-tight text-foreground">Resume</h2>
-                                        <p className="mt-2 text-sm text-muted-foreground">Redesign this for better viewability.</p>
+                                        <p className="mt-2 text-sm text-muted-foreground">Download or view below.</p>
                                     </div>
-                                    <a
-                                        href="/resume.pdf"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-foreground transition hover:-translate-y-0.5"
+                                    <Button
+                                        asChild
+                                        variant="outline"
+                                        className="rounded-full"
                                     >
-                                        Download Resume
-                                    </a>
+                                        <a
+                                            href="/resume.pdf"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Download Resume
+                                        </a>
+                                    </Button>
                                 </div>
                                 <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
                                     <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -1040,60 +968,47 @@ export default function PortfolioMock({
                                     <iframe
                                         title="Resume PDF"
                                         src="/resume.pdf"
+                                        loading="lazy"
                                         className="h-[75vh] w-full"
-                                    />
-                                </div>
-
-
-                                <div className="mt-6 grid gap-3 md:grid-cols-2">
-                                    {[
-                                        {
-                                            t: "Strategic focus",
-                                            d: "Alignment across stakeholders, constrained environments, decision clarity.",
-                                        },
-                                        {
-                                            t: "Defense-ready",
-                                            d: "Clearance-forward positioning with mission constraints in mind.",
-                                        },
-                                    ].map((x) => (
-                                        <div key={x.t} className="rounded-2xl border border-border bg-card/80 p-5">
-                                            <div className="text-sm font-semibold text-foreground">{x.t}</div>
-                                            <div className="mt-2 text-sm text-muted-foreground">{x.d}</div>
+                                    >
+                                        <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
+                                            <p className="text-sm text-muted-foreground">Your browser can&apos;t display this PDF inline.</p>
+                                            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground underline underline-offset-4">
+                                                Open PDF directly
+                                            </a>
                                         </div>
-                                    ))}
+                                    </iframe>
                                 </div>
 
-                                <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-6">
-                                    <div className="text-sm font-semibold text-foreground">Resume content placeholder</div>
-                                    <p className="mt-2 text-sm text-muted-foreground">
-                                        Insert Experience / Education / Clearance / Tools. Keep it scannable.
-                                    </p>
+
+                                <div className="mt-6 rounded-xl border border-border bg-card/80 p-4">
+                                    <div className="text-sm font-semibold text-foreground">Strategic focus</div>
+                                    <div className="mt-2 text-sm text-muted-foreground">Alignment across stakeholders, constrained environments, decision clarity.</div>
                                 </div>
-                            </section>
-                        </motion.div>
+
+                            </Container>
+                        </m.div>
                     ) : null}
 
                     {active === "contact" ? (
-                        <motion.div
+                        <m.div
                             key="contact"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 6 }}
-                            transition={{ duration: 0.18 }}
+                            {...fadeUp}
+                            transition={PAGE_TRANSITION}
                             className="space-y-6"
                         >
-                            <section className="rounded-[2.25rem] border border-border bg-card p-6 shadow-sm md:p-8">
+                            <Container>
                                 <div>
                                     <h2 className="text-2xl font-semibold tracking-tight text-foreground">Contact</h2>
                                     <p className="mt-2 text-sm text-muted-foreground">
-                                        Feel free to e-mail or connect through LinkedIn
+                                        Let's talk — reach out by email or LinkedIn.
                                     </p>
                                 </div>
 
                                 <div className="mt-6 grid gap-3 md:grid-cols-2">
                                     <button
                                         onClick={() => onCopyEmail()}
-                                        className="flex items-center justify-between rounded-2xl border border-border bg-card p-5 text-left hover:bg-accent"
+                                        className="flex items-center justify-between rounded-2xl border border-border bg-card p-5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     >
                                         <div>
                                             <div className="text-sm font-semibold text-foreground">Email</div>
@@ -1102,19 +1017,21 @@ export default function PortfolioMock({
                                         <Copy className="h-4 w-4 text-muted-foreground" />
                                     </button>
 
-                                    <button
-                                        onClick={() => alert("Wire to LinkedIn")}
-                                        className="flex items-center justify-between rounded-2xl bg-primary p-5 text-left"
+                                    <a
+                                        href="https://www.linkedin.com/in/wilmsas/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-between rounded-2xl border border-border bg-card p-5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     >
                                         <div>
-                                            <div className="text-sm font-semibold text-primary-foreground">LinkedIn</div>
-                                            <div className="mt-1 text-sm text-primary-foreground/70">Open profile</div>
+                                            <div className="text-sm font-semibold text-foreground">LinkedIn</div>
+                                            <div className="mt-1 text-sm text-muted-foreground">Open profile</div>
                                         </div>
-                                        <ArrowUpRight className="h-4 w-4 text-primary-foreground" />
-                                    </button>
+                                        <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+                                    </a>
                                 </div>
-                            </section>
-                        </motion.div>
+                            </Container>
+                        </m.div>
                     ) : null}
                 </AnimatePresence>
             </main>
@@ -1122,14 +1039,12 @@ export default function PortfolioMock({
             {/* Tiny toast */}
             <AnimatePresence>
                 {toast ? (
-                    <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 12 }}
-                        className="fixed bottom-4 left-1/2 z-40 w-[min(520px,92vw)] -translate-x-1/2 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground shadow-lg"
+                    <m.div
+                        {...fadeUpSm}
+                        className="fixed bottom-4 left-1/2 z-40 w-[min(520px,92vw)] -translate-x-1/2 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground shadow-overlay"
                     >
                         {toast.msg}
-                    </motion.div>
+                    </m.div>
                 ) : null}
             </AnimatePresence>
         </div>

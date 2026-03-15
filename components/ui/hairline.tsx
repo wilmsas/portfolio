@@ -1,0 +1,6 @@
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+export function Hairline({ className }: { className?: string }) {
+  return <div className={cn("h-px w-full bg-muted", className)} />
+}

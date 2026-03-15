@@ -8,20 +8,20 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Aleks — Defense-Oriented Product Designer",
-  description: "Strategic product design, alignment, and decision-ready systems",
+  title: "Aleks — Product Designer & UX Strategist",
+  description: "Strategic product design for high-stakes, complex environments. Discovery to delivery.",
   metadataBase: new URL("https://wilmsas.net"),
   openGraph: {
-    title: "Aleks — Product Designer",
-    description: "Strategic product design, alignment, and decision-ready systems",
+    title: "Aleks — Product Designer & UX Strategist",
+    description: "Strategic product design for high-stakes, complex environments. Discovery to delivery.",
     url: "https://wilmsas.net",
     siteName: "Aleks Portfolio",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aleks — Product Designer",
-    description: "Strategic product design, alignment, and decision-ready systems",
+    title: "Aleks — Product Designer & UX Strategist",
+    description: "Strategic product design for high-stakes, complex environments. Discovery to delivery.",
   },
 };
 
