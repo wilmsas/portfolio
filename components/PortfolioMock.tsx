@@ -241,19 +241,19 @@ function CaseImage({
 }) {
     if (!imageKey || !images?.[imageKey]) return null;
     return (
-        <figure className={cn("mt-8", variant === "hero" && "-mx-1 md:-mx-4")}>
+        <figure className={cn("mt-8", variant === "hero" && "-mx-2 md:-mx-6")}>
             <img
                 src={images[imageKey]}
                 alt={caption || imageKey}
                 className={cn(
-                    "block max-w-full rounded-lg mx-auto",
+                    "block rounded-lg",
                     variant === "hero"
-                        ? "h-auto w-full max-h-[36rem] object-contain"
-                        : "h-auto w-full max-h-[28rem] object-contain",
+                        ? "h-auto w-full"
+                        : "h-auto w-full max-h-[28rem] max-w-full mx-auto object-contain",
                 )}
                 loading="lazy"
             />
-            {caption && (
+            {variant !== "hero" && caption && (
                 <figcaption className="mt-3 text-center text-sm text-muted-foreground">
                     {caption}
                 </figcaption>
@@ -417,15 +417,7 @@ function CaseDetail({
                                 </p>
                             )}
                             {c.fullContent.counselingFlow.phases.map((phase, idx) => (
-                                <div key={idx} className={idx > 0 ? "mt-12" : ""}>
-                                    <div className="mb-4 flex items-center gap-3">
-                                        <span className="font-mono text-[11px] tabular-nums text-muted-foreground/30">
-                                            {String(idx + 1).padStart(2, "0")}
-                                        </span>
-                                        <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70">
-                                            {phase.phase.replace(/^Phase \d+[: \u2014]+/, "")}
-                                        </span>
-                                    </div>
+                                <div key={idx} className={idx > 0 ? "mt-14" : ""}>
                                     <p className="text-base leading-relaxed text-foreground/85">{phase.description}</p>
                                     <CaseImage images={imgs} imageKey={phase.imageKey} caption={phase.caption} variant="hero" />
                                 </div>
