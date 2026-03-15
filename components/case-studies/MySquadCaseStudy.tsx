@@ -501,7 +501,7 @@ export default function MySquadCaseStudy() {
                     className="absolute left-[13px] top-7 h-full w-px bg-primary/20"
                   />
                 )}
-                <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-[11px] tabular-nums text-primary">
+                <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-background font-mono text-[11px] tabular-nums text-primary">
                   {idx + 1}
                 </div>
                 <p className="pt-0.5 text-sm leading-relaxed text-foreground/85">
