@@ -248,7 +248,7 @@ function CaseImage({
                 className={cn(
                     "block rounded-lg",
                     variant === "hero"
-                        ? "h-auto w-full"
+                        ? "h-auto w-full ring-1 ring-border/40"
                         : "h-auto w-full max-h-[28rem] max-w-full mx-auto object-contain",
                 )}
                 loading="lazy"
@@ -264,10 +264,16 @@ function CaseImage({
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <section className="border-t border-border pt-12 pb-8">
+        <m.section
+            className="border-t border-border pt-12 pb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
             <p className="mb-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">{label}</p>
             {children}
-        </section>
+        </m.section>
     );
 }
 
@@ -323,8 +329,13 @@ function CaseDetail({
                    EDITORIAL layout — rich case studies
                 ───────────────────────────────────────────── */
                 <article>
-                    {/* Hero — no card, just big type */}
-                    <header className="pb-10">
+                    {/* Hero */}
+                    <m.header
+                        className="pb-10"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    >
                         <div className="mb-5 flex flex-wrap gap-2">
                             {c.tags.map((t) => <Tag key={t}>{t}</Tag>)}
                         </div>
@@ -334,7 +345,6 @@ function CaseDetail({
                         <p className="mt-4 max-w-2xl text-pretty text-lg text-foreground/60">
                             {c.outcome}
                         </p>
-                        {/* Meta — flat key-value pairs, no card borders */}
                         <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
                             <div>
                                 <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">Timeline</div>
@@ -353,37 +363,45 @@ function CaseDetail({
                                 </div>
                             )}
                         </div>
-                    </header>
+                    </m.header>
 
                     {/* Brief — flows from hero, no label */}
                     {c.fullContent?.brief && (
-                        <section className="border-t border-border pt-10 pb-6">
+                        <m.section
+                            className="border-t border-border pt-10 pb-6"
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        >
                             <Paras text={c.fullContent.brief} />
-                        </section>
+                        </m.section>
                     )}
 
-                    {/* The Problem — users integrated */}
+                    {/* The Problem */}
                     {c.fullContent?.problemStatement && (
                         <Section label="The Problem">
                             <Paras text={c.fullContent.problemStatement} />
-                            {c.fullContent.users && (
-                                <div className="mt-8">
-                                    <div className="space-y-4">
-                                        {c.fullContent.users.primary.map((user, idx) => (
-                                            <p key={idx} className="text-base leading-relaxed text-foreground/85">{user}</p>
-                                        ))}
-                                    </div>
-                                    {c.fullContent.users.environment && (
-                                        <p className="mt-5 text-base leading-relaxed text-foreground/60">
-                                            {c.fullContent.users.environment}
-                                        </p>
-                                    )}
-                                </div>
+                        </Section>
+                    )}
+
+                    {/* Users & Environment */}
+                    {c.fullContent?.users && (
+                        <Section label="Users & Environment">
+                            <div className="space-y-4">
+                                {c.fullContent.users.primary.map((user, idx) => (
+                                    <p key={idx} className="text-base leading-relaxed text-foreground/85">{user}</p>
+                                ))}
+                            </div>
+                            {c.fullContent.users.environment && (
+                                <p className="mt-6 text-base leading-relaxed text-foreground/60">
+                                    {c.fullContent.users.environment}
+                                </p>
                             )}
                         </Section>
                     )}
 
-                    {/* Discovery */}
+                    {/* Discovery & Research */}
                     {c.fullContent?.discovery && (
                         <Section label="Discovery & Research">
                             <Paras text={c.fullContent.discovery.description} />
@@ -396,7 +414,7 @@ function CaseDetail({
                         </Section>
                     )}
 
-                    {/* Critical constraint */}
+                    {/* The Design Constraint */}
                     {c.fullContent?.criticalConstraint && (
                         <Section label="The Constraint That Shaped Everything">
                             <Paras text={c.fullContent.criticalConstraint.description} />
@@ -408,7 +426,7 @@ function CaseDetail({
                         </Section>
                     )}
 
-                    {/* Counseling Flow — BOLD: images are the star */}
+                    {/* Counseling Flow — images are the star */}
                     {c.fullContent?.counselingFlow && (
                         <Section label="Counseling Flow">
                             {c.fullContent.counselingFlow.intro && (
@@ -417,25 +435,42 @@ function CaseDetail({
                                 </p>
                             )}
                             {c.fullContent.counselingFlow.phases.map((phase, idx) => (
-                                <div key={idx} className={idx > 0 ? "mt-14" : ""}>
+                                <m.div
+                                    key={idx}
+                                    className={idx > 0 ? "mt-14" : ""}
+                                    initial={{ opacity: 0, y: 16 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-60px" }}
+                                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                >
                                     <p className="text-base leading-relaxed text-foreground/85">{phase.description}</p>
                                     <CaseImage images={imgs} imageKey={phase.imageKey} caption={phase.caption} variant="hero" />
-                                </div>
+                                </m.div>
                             ))}
                         </Section>
                     )}
 
-                    {/* QR Handshake — BOLD: visual peak, tinted background */}
+                    {/* QR Handshake — visual peak with tinted background */}
                     {c.fullContent?.qrHandshake && (
-                        <section className="-mx-4 mt-2 rounded-2xl border border-primary/[0.08] bg-primary/[0.03] px-4 pb-10 pt-10 md:-mx-8 md:px-8">
+                        <m.section
+                            className="-mx-4 mt-2 rounded-2xl border border-primary/[0.08] bg-primary/[0.03] px-4 pb-10 pt-10 md:-mx-8 md:px-8"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        >
                             <p className="mb-8 font-mono text-[10px] uppercase tracking-widest text-primary/50">The QR Handshake</p>
                             {c.fullContent.qrHandshake.description && (
                                 <Paras text={c.fullContent.qrHandshake.description} />
                             )}
-                            <div className="mt-8 space-y-6">
+                            {/* Vertical timeline with connected dots */}
+                            <div className="relative mt-8">
                                 {c.fullContent.qrHandshake.steps.map((step, idx) => (
-                                    <div key={idx} className="flex gap-5">
-                                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-[11px] tabular-nums text-primary">
+                                    <div key={idx} className="relative flex gap-5 pb-8 last:pb-0">
+                                        {idx < c.fullContent!.qrHandshake!.steps.length - 1 && (
+                                            <div className="absolute left-[13px] top-7 h-full w-px bg-primary/20" />
+                                        )}
+                                        <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-[11px] tabular-nums text-primary">
                                             {idx + 1}
                                         </div>
                                         <p className="pt-0.5 text-base leading-relaxed text-foreground/85">{step}</p>
@@ -451,14 +486,14 @@ function CaseDetail({
                                     </p>
                                 </div>
                             )}
-                        </section>
+                        </m.section>
                     )}
 
                     {/* Accountability */}
                     {c.fullContent?.accountability && (
-                        <Section label="Squad Accountability">
+                        <Section label="Accountability">
                             <Paras text={c.fullContent.accountability.description} />
-                            <CaseImage images={imgs} imageKey={c.fullContent.accountability.imageKey} caption={c.fullContent.accountability.caption} />
+                            <CaseImage images={imgs} imageKey={c.fullContent.accountability.imageKey} caption={c.fullContent.accountability.caption} variant="hero" />
                         </Section>
                     )}
 
