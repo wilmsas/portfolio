@@ -75,7 +75,7 @@ const IMG = {
   counseling: "/images/case-studies/mysquad/01_counseling_entry.png",
   setup: "/images/case-studies/mysquad/02_session_setup.png",
   content: "/images/case-studies/mysquad/03_session_content.png",
-  signatures: "/images/case-studies/mysquad/04_qr_handshake.png",
+  signatures: "/images/case-studies/mysquad/04_qr_signatures.png",
   accountability: "/images/case-studies/mysquad/05_accountability.png",
 } as const;
 

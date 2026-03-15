@@ -102,7 +102,7 @@ export const mysquad: CaseStudy = {
       counseling_entry: "/images/case-studies/mysquad/01_counseling_entry.png",
       session_setup: "/images/case-studies/mysquad/02_session_setup.png",
       session_content: "/images/case-studies/mysquad/03_session_content.png",
-      qr_handshake: "/images/case-studies/mysquad/04_qr_handshake.png",
+      qr_handshake: "/images/case-studies/mysquad/04_qr_signatures.png",
       accountability: "/images/case-studies/mysquad/05_accountability.png",
     },
     meta: {
