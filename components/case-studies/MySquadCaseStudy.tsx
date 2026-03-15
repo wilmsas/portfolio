@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m, useReducedMotion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ── Layout primitives ── */
@@ -132,21 +132,23 @@ export default function MySquadCaseStudy() {
       </Narrow>
 
       {/* ── Opening text ── */}
-      <Narrow className="mt-12">
+      <Narrow className="mt-8">
         <FadeIn>
           <p className="text-base leading-relaxed text-foreground/85">
             In 2021, the Sergeant Major of the Army gave the Army Software
             Factory a simple directive. What followed was an 8-month sprint to
             build a squad-level tool deployed across every enlisted rank in the
-            U.S. Army.
+            U.S. Army. We inherited a functional backend but a disjointed
+            frontend with no meaningful design system. We tore it down and
+            rebuilt it from scratch.
           </p>
         </FadeIn>
       </Narrow>
 
-      {/* ── Pull-quote ── */}
-      <Narrow className="mt-12 text-center">
+      {/* ── Pull-quote — the directive (larger, origin story) ── */}
+      <Narrow className="mt-14 text-center">
         <FadeIn>
-          <blockquote className="font-serif text-xl italic leading-relaxed text-foreground">
+          <blockquote className="font-serif text-2xl italic leading-relaxed text-foreground md:text-3xl">
             &ldquo;Make a kick-ass app for squad leaders.&rdquo;
           </blockquote>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -185,7 +187,7 @@ export default function MySquadCaseStudy() {
         </FadeIn>
       </Narrow>
 
-      {/* ── Pull-quote ── */}
+      {/* ── Pull-quote — user pain (supporting evidence, smaller) ── */}
       <Narrow className="mt-12 text-center">
         <FadeIn>
           <blockquote className="font-serif text-xl italic leading-relaxed text-foreground">
@@ -194,27 +196,6 @@ export default function MySquadCaseStudy() {
           </blockquote>
           <p className="mt-3 text-sm text-muted-foreground">
             &mdash; 101st IN Specialist (E-4), during user research
-          </p>
-        </FadeIn>
-      </Narrow>
-
-      <Divider />
-
-      {/* ═══════════════════════════════════════════
-          BEFORE
-      ═══════════════════════════════════════════ */}
-      <Narrow>
-        <FadeIn>
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Before
-          </p>
-          <h2 className="mb-5 text-2xl font-semibold tracking-tight">
-            Design by committee, not system
-          </h2>
-          <p className="text-base leading-relaxed text-foreground/85">
-            When we inherited MySquad, it had a functional backend but a
-            disjointed frontend with no meaningful design system. We tore it
-            down completely and rebuilt it from scratch.
           </p>
         </FadeIn>
       </Narrow>
@@ -332,7 +313,7 @@ export default function MySquadCaseStudy() {
             </p>
           </div>
 
-          {/* Insight callout — design principle, differentiated with left accent */}
+          {/* Insight callout — design principle, primary-tinted */}
           <div className="mt-8 rounded-xl border border-primary/20 bg-primary/[0.04] p-5">
             <p className="text-sm font-medium leading-relaxed text-foreground">
               &ldquo;We had to translate a paper-based artifact into a digital
@@ -375,8 +356,8 @@ export default function MySquadCaseStudy() {
           <Image
             src={IMG.counseling}
             alt="Counseling entry flow showing home screen, new counseling options, and type selection"
-            width={1920}
-            height={1080}
+            width={1050}
+            height={700}
             priority
             className="h-auto w-full rounded-lg ring-1 ring-border/40"
           />
@@ -410,8 +391,8 @@ export default function MySquadCaseStudy() {
           <Image
             src={IMG.setup}
             alt="Session setup showing soldier search, admin data, and readiness information"
-            width={1920}
-            height={1080}
+            width={1050}
+            height={700}
             className="h-auto w-full rounded-lg ring-1 ring-border/40"
           />
         </FadeIn>
@@ -444,8 +425,8 @@ export default function MySquadCaseStudy() {
           <Image
             src={IMG.content}
             alt="Session documentation showing full session view, SMART goal wizard, and completed counseling"
-            width={1920}
-            height={1080}
+            width={1050}
+            height={700}
             className="h-auto w-full rounded-lg ring-1 ring-border/40"
           />
         </FadeIn>
@@ -454,77 +435,79 @@ export default function MySquadCaseStudy() {
       <Divider />
 
       {/* ═══════════════════════════════════════════
-          THE QR HANDSHAKE
+          THE QR HANDSHAKE — BOLD: visual climax
       ═══════════════════════════════════════════ */}
-      <Narrow>
-        <FadeIn>
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Enforcing presence
-          </p>
-          <h2 className="mb-5 text-2xl font-semibold tracking-tight">
-            The QR handshake
-          </h2>
-          <p className="text-base leading-relaxed text-foreground/85">
-            The most critical design decision was how we handled signatures. We
-            needed to prove both parties were physically present &mdash; without
-            DocuSign &mdash; within a government web app.
-          </p>
+      <div className="-mx-4 rounded-2xl bg-primary/[0.03] px-4 pb-16 pt-20 md:-mx-0 md:mx-auto md:max-w-[920px] md:px-12">
+        <div className="mx-auto max-w-[620px]">
+          <FadeIn>
+            <p className="mb-2 text-xs font-medium uppercase tracking-widest text-primary/60">
+              Enforcing presence
+            </p>
+            <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
+              The QR handshake
+            </h2>
+            <p className="text-base leading-relaxed text-foreground/85">
+              The most critical design decision was how we handled signatures.
+              We needed to prove both parties were physically present &mdash;
+              without DocuSign &mdash; within a government web app.
+            </p>
 
-          {/* Stepped timeline — semantic ordered list */}
-          <ol className="relative mt-10 list-none p-0">
-            {[
-              {
-                lead: "Counselor completes the session.",
-                detail: "The conversation happens in person.",
-              },
-              {
-                lead: "Unique QR code generated.",
-                detail: "Tied to that session only.",
-              },
-              {
-                lead: "Counselee scans on their device.",
-                detail: "Physical proximity required.",
-              },
-              {
-                lead: "Both sign with custom signature block.",
-                detail: "Finger-drawn, built from scratch.",
-              },
-              {
-                lead: "DA 4856 PDF generated.",
-                detail: "Every field compiled into the official form.",
-              },
-            ].map((step, idx, arr) => (
-              <li key={idx} className="relative flex gap-5 pb-8 last:pb-0">
-                {idx < arr.length - 1 && (
-                  <div
-                    aria-hidden="true"
-                    className="absolute left-[13px] top-7 h-full w-px bg-primary/20"
-                  />
-                )}
-                <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-background font-mono text-[11px] tabular-nums text-primary">
-                  {idx + 1}
-                </div>
-                <p className="pt-0.5 text-sm leading-relaxed text-foreground/85">
-                  <strong className="text-foreground">{step.lead}</strong>{" "}
-                  {step.detail}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </FadeIn>
-      </Narrow>
+            {/* Stepped timeline — semantic ordered list */}
+            <ol className="relative mt-10 list-none p-0">
+              {[
+                {
+                  lead: "Counselor completes the session.",
+                  detail: "The conversation happens in person.",
+                },
+                {
+                  lead: "Unique QR code generated.",
+                  detail: "Tied to that session only.",
+                },
+                {
+                  lead: "Counselee scans on their device.",
+                  detail: "Physical proximity required.",
+                },
+                {
+                  lead: "Both sign with custom signature block.",
+                  detail: "Finger-drawn, built from scratch.",
+                },
+                {
+                  lead: "DA 4856 PDF generated.",
+                  detail: "Every field compiled into the official form.",
+                },
+              ].map((step, idx, arr) => (
+                <li key={idx} className="relative flex gap-5 pb-8 last:pb-0">
+                  {idx < arr.length - 1 && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute left-[13px] top-7 h-full w-px bg-primary/20"
+                    />
+                  )}
+                  <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-[11px] tabular-nums text-primary">
+                    {idx + 1}
+                  </div>
+                  <p className="pt-0.5 text-sm leading-relaxed text-foreground/85">
+                    <strong className="text-foreground">{step.lead}</strong>{" "}
+                    {step.detail}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </FadeIn>
+        </div>
 
-      {/* Bold callout paragraph */}
-      <Narrow className="mt-10">
-        <FadeIn>
-          <p className="text-base font-medium leading-relaxed text-foreground">
-            This wasn&rsquo;t just a digital convenience &mdash; it was an
-            integrity mechanism. The QR handshake made it impossible to complete
-            a counseling asynchronously. No remote sign-offs. No post-hoc
-            signatures. No checkbox counselings.
-          </p>
-        </FadeIn>
-      </Narrow>
+        {/* Bold callout — the punchline */}
+        <div className="mx-auto mt-12 max-w-[620px]">
+          <FadeIn>
+            <p className="text-lg font-medium leading-relaxed text-foreground">
+              This wasn&rsquo;t just a digital convenience &mdash; it was an
+              integrity mechanism. The QR handshake made it impossible to
+              complete a counseling asynchronously. No remote sign-offs. No
+              post-hoc signatures. No checkbox counselings.
+            </p>
+          </FadeIn>
+        </div>
+      </div>
 
       <Divider />
 
@@ -553,8 +536,8 @@ export default function MySquadCaseStudy() {
           <Image
             src={IMG.accountability}
             alt="Accountability flow showing event creation, push notification, and totals view"
-            width={1920}
-            height={1080}
+            width={1050}
+            height={700}
             className="h-auto w-full rounded-lg ring-1 ring-border/40"
           />
         </FadeIn>
@@ -567,9 +550,6 @@ export default function MySquadCaseStudy() {
       ═══════════════════════════════════════════ */}
       <Narrow>
         <FadeIn>
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Reflection
-          </p>
           <div className="space-y-4">
             <p className="text-base leading-relaxed text-foreground/85">
               MySquad taught me that the hardest design problems aren&rsquo;t
@@ -590,6 +570,25 @@ export default function MySquadCaseStudy() {
               for wildly different contexts, technical literacy levels, and
               leadership cultures.
             </p>
+          </div>
+        </FadeIn>
+      </Narrow>
+
+      {/* ── Closing — next case study ── */}
+      <Narrow className="mt-20">
+        <FadeIn>
+          <hr className="border-border" />
+          <div className="flex items-center justify-between py-8">
+            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+              Next case study
+            </span>
+            <Link
+              href="/case-studies/atlas"
+              className="group inline-flex items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-primary"
+            >
+              Atlas
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" />
+            </Link>
           </div>
         </FadeIn>
       </Narrow>
